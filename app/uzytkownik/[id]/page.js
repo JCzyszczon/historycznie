@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import { MdEdit } from "react-icons/md";
 import { FaClock } from "react-icons/fa6";
 
-function page() {
+export default function Home() {
   const { data: session } = useSession();
   const params = useParams();
   const userId = params.id;
@@ -74,5 +74,3 @@ function page() {
     </section>
   );
 }
-
-export default page;
