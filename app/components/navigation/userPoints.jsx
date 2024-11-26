@@ -13,30 +13,16 @@ const formatPoints = (points) => {
 };
 
 function UserPoints({ session }) {
-  //const [points, setPoints] = useState(null);
   const { points, isLoading, isError } = useUserPoints(session.user.id);
-
-  /*useEffect(() => {
-    socket.emit("startMonitoring", session.user.id);
-
-    socket.on("pointsUpdate", (updatedPoints) => {
-      setPoints(updatedPoints);
-    });
-
-    return () => {
-      socket.off("pointsUpdate");
-      socket.disconnect();
-    };
-  }, [session.user.id]);*/
 
   return (
     <>
-      {!isLoading ? (
+      {isLoading || isError || !points ? (
+        <p className='w-[70px] h-[24px] animate-pulse bg-gray-300 rounded-lg'></p>
+      ) : (
         <p className='text-textColor font-[500] text-base'>
           {formatPoints(points)}
         </p>
-      ) : (
-        <p className='w-[70px] h-[24px] animate-pulse bg-gray-300 rounded-lg'></p>
       )}
     </>
   );

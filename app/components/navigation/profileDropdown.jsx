@@ -6,6 +6,7 @@ import { signOut } from "next-auth/react";
 import { IoCart, IoPerson, IoSettingsSharp } from "react-icons/io5";
 import { useUser } from "../../hooks/useUser";
 import Link from "next/link";
+import Image from "next/image";
 
 function ProfileDropdown({ session, onClose }) {
   const { user, isLoading, isError } = useUser(session.user.id);
@@ -23,7 +24,17 @@ function ProfileDropdown({ session, onClose }) {
         href={`/uzytkownik/${session.user.id}`}
         className='w-full flex gap-4 justify-start items-center px-2 py-2 bg-transparent hover:bg-gray-50 cursor-pointer duration-200 rounded-2xl'
       >
-        <div className='w-[40px] h-[40px] rounded-full bg-primaryColor'></div>
+        {isLoading || isError ? (
+          <div className='w-[40px] h-[40px] rounded-full bg-gray-300 animate-pulse'></div>
+        ) : (
+          <Image
+            src={user.activeAvatar.imageUrl}
+            width={40}
+            height={40}
+            alt='Profile Avatar'
+            className='w-[40px] h-[40px] rounded-full'
+          />
+        )}
         <div className='flex flex-col justify-center items-start gap-0'>
           {isLoading || isError ? (
             <h3 className='w-[80px] h-[24px] bg-gray-300 animate-pulse rounded-lg'></h3>

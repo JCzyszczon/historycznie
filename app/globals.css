@@ -2,13 +2,45 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .custom-scrollbar::-webkit-scrollbar-track {
+    border-radius: 8px;
+    background-color: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    background-color: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background-color: var(--primaryColor);
+  }
+
+  @media (max-width: 639px) {
+    .custom-scrollbar::-webkit-scrollbar-track {
+      border-radius: 3px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      border-radius: 3px;
+      background-color: var(--borderColor);
+    }
+  }
+}
+
 :root {
   --background: #ffffff;
   --background2: #f2f2f2;
   --textColor: #171717;
   --descriptionColor: #6b7280;
-  --primaryColor: #61e002;
-  --secondaryColor: #61b800;
+  --primaryColor: #58cc02;
+  --secondaryColor: #58a700;
   --borderColor: #d1d5db;
 }
 
@@ -220,4 +252,19 @@ input:-webkit-autofill:active {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+.grid-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(auto, 200px));
+  grid-auto-rows: 1fr;
+  gap: 16px;
+  text-align: center;
+}
+
+@media (max-width: 639px) {
+  .grid-panel {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
 }

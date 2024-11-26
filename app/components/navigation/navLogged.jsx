@@ -7,8 +7,11 @@ import ProfileDropdown from "./profileDropdown";
 import Image from "next/image";
 import CoinsImage from "../../img/5252389.png";
 import UserPoints from "./userPoints";
+import { useUser } from "../../hooks/useUser";
 
 function NavLogged({ session }) {
+  const { user, isLoading, isError } = useUser(session.user.id);
+
   const [navState, setNavState] = useState(false);
   const [profileState, setProfileState] = useState(false);
   const profileRef = useRef(null);
@@ -86,11 +89,19 @@ function NavLogged({ session }) {
             <UserPoints session={session} />
           </section>
           <section className='flex justify-center items-center'>
-            <span
-              ref={profileRef}
-              onClick={() => setProfileState(!profileState)}
-              className='sm:w-[40px] w-[32px] sm:h-[40px] h-[32px] rounded-full bg-primaryColor'
-            ></span>
+            {isLoading || isError || !user ? (
+              <div className='sm:w-[40px] w-[32px] sm:h-[40px] h-[32px] rounded-full bg-gray-300 animate-pulse'></div>
+            ) : (
+              <Image
+                ref={profileRef}
+                onClick={() => setProfileState(!profileState)}
+                src={user.activeAvatar.imageUrl}
+                width={40}
+                height={40}
+                alt='Profile Avatar'
+                className='sm:w-[40px] w-[32px] sm:h-[40px] h-[32px] rounded-full'
+              />
+            )}
           </section>
           <button
             onClick={() => setNavState(!navState)}

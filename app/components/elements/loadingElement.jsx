@@ -1,8 +1,10 @@
-const LoadingElement = ({ ...props }) => {
+const LoadingElement = ({ variant, ...props }) => {
   return (
     <div className='w-full flex justify-center items-center' {...props}>
       <svg
-        className='h-5 w-5 animate-spin text-background'
+        className={`h-5 w-5 animate-spin ${
+          variant === "primary" ? "text-primaryColor" : "text-background"
+        }`}
         xmlns='http://www.w3.org/2000/svg'
         fill='none'
         viewBox='0 0 24 24'
