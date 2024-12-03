@@ -223,10 +223,11 @@ export const authOptions: NextAuthOptions = {
       }
 
       if (user) {
+        const userWithRole = user as User;
         return {
           ...token,
-          id: user.id,
-          role: user.role,
+          id: userWithRole.id,
+          role: userWithRole.role,
         };
       }
 
