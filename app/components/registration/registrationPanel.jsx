@@ -351,7 +351,7 @@ export default function RegistrationPanel() {
                 lub
               </span>
             </div>
-            <Button variant='secondary'>
+            <Button variant='secondary' onClick={() => signIn("google")}>
               <Image
                 src={GoogleIcon}
                 alt='Google Icon'

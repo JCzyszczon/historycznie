@@ -1,11 +1,19 @@
 import { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
+
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID!;
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET!;
 
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
   providers: [
+    GoogleProvider({
+      clientId: GOOGLE_CLIENT_ID,
+      clientSecret: GOOGLE_CLIENT_SECRET,
+    }),
     CredentialsProvider({
       name: "Sign in",
       credentials: {
@@ -45,6 +53,42 @@ export const authOptions: NextAuthOptions = {
     signIn: "/auth/logowanie",
   },
   callbacks: {
+    /*async signIn({ account, profile }) {
+      if (account?.provider === "google") {
+        if (!profile?.email) {
+          throw new Error("Brak profilu.");
+        }
+
+        console.log(profile);
+
+        try {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/google-login`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email: profile.email,
+                name: profile.name,
+              }),
+            }
+          );
+
+          if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(errorMessage || "Nie udało się zalogować.");
+          }
+
+          return true;
+        } catch (error) {
+          console.error("Błąd logowania z Google:", error);
+          return false;
+        }
+      }
+      return true;
+    },
     session({ session, token }) {
       return {
         ...session,
@@ -64,6 +108,72 @@ export const authOptions: NextAuthOptions = {
         };
       }
       return token;
+    },*/
+    async signIn({ account, profile }) {
+      if (account?.provider === "google") {
+        if (!profile?.email) {
+          throw new Error("Brak profilu.");
+        }
+
+        try {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/google-login`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email: profile.email,
+                name: profile.name,
+              }),
+            }
+          );
+
+          if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(errorMessage || "Nie udało się zalogować.");
+          }
+
+          const userData = await response.json();
+
+          account.user = userData;
+          return true;
+        } catch (error) {
+          console.error("Błąd logowania z Google:", error);
+          return false;
+        }
+      }
+      return true;
+    },
+    async jwt({ token, user, account }) {
+      if (account?.provider === "google" && account.user) {
+        return {
+          ...token,
+          id: account.user.id,
+          role: account.user.role,
+        };
+      }
+
+      if (user) {
+        return {
+          ...token,
+          id: user.id,
+          role: user.role,
+        };
+      }
+
+      return token;
+    },
+    session({ session, token }) {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.id,
+          role: token.role,
+        },
+      };
     },
   },
 };

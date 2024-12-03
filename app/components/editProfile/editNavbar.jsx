@@ -1,5 +1,5 @@
 import React from "react";
-import { FaImagePortrait, FaImage, FaUser } from "react-icons/fa6";
+import { FaImagePortrait, FaImage, FaUser, FaMedal } from "react-icons/fa6";
 
 function EditNavbar({ activePanel, setActivePanel }) {
   return (
@@ -25,6 +25,16 @@ function EditNavbar({ activePanel, setActivePanel }) {
             } duration-200 translate-x-[2px]`}
           >
             Tło profilu
+          </li>
+          <li
+            onClick={() => setActivePanel("Badges")}
+            className={`w-full cursor-pointer text-center border-r-[4px] py-1 ${
+              activePanel === "Badges"
+                ? "border-primaryColor text-textColor hover:text-textColor"
+                : "border-transparent hover:text-descriptionColor"
+            } duration-200 translate-x-[2px]`}
+          >
+            Odznaki
           </li>
           <li
             onClick={() => setActivePanel("Data")}
@@ -55,6 +65,14 @@ function EditNavbar({ activePanel, setActivePanel }) {
             } duration-200`}
           >
             <FaImage />
+          </li>
+          <li
+            onClick={() => setActivePanel("Badges")}
+            className={`h-full cursor-pointer ${
+              activePanel === "Badges" && "text-primaryColor"
+            } duration-200`}
+          >
+            <FaMedal />
           </li>
           <li
             onClick={() => setActivePanel("Data")}

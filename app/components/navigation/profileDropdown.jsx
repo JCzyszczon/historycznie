@@ -64,9 +64,15 @@ function ProfileDropdown({ session, onClose }) {
             <span>Twoje konto</span>
           </Link>
         </li>
-        <li className='w-full flex justify-start items-center gap-4 text-descriptionColor hover:text-textColor duration-200 cursor-pointer'>
-          <IoCart className='text-lg' />
-          <span>Sklep z punktami</span>
+        <li className='w-full text-descriptionColor hover:text-textColor duration-200'>
+          <Link
+            onClick={onClose}
+            href={"/sklep"}
+            className='w-full flex justify-start items-center gap-4'
+          >
+            <IoCart className='text-lg' />
+            <span>Sklep z nagrodami</span>
+          </Link>
         </li>
         <li className='w-full flex justify-start items-center gap-4 text-descriptionColor hover:text-textColor duration-200 cursor-pointer'>
           <IoSettingsSharp className='text-lg' />

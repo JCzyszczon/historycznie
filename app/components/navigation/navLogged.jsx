@@ -8,6 +8,7 @@ import Image from "next/image";
 import CoinsImage from "../../img/5252389.png";
 import UserPoints from "./userPoints";
 import { useUser } from "../../hooks/useUser";
+import NotificationsIcon from "./notificationsIcon";
 
 function NavLogged({ session }) {
   const { user, isLoading, isError } = useUser(session.user.id);
@@ -58,13 +59,6 @@ function NavLogged({ session }) {
             </li>
             <li
               className={`duration-200 ${
-                pathname === "/dashboard" ? "active" : ""
-              }`}
-            >
-              <Link href='/dashboard'>Dashboard</Link>
-            </li>
-            <li
-              className={`duration-200 ${
                 pathname === "/lekcje" ? "active" : ""
               }`}
             >
@@ -80,14 +74,17 @@ function NavLogged({ session }) {
           </ul>
         </nav>
         <section className='w-full flex justify-end items-center gap-4 text-lg cursor-pointer select-none'>
-          <section className='flex justify-center items-center gap-1'>
-            <Image
-              src={CoinsImage}
-              alt='CoinsImage'
-              className='w-auto sm:h-[26px] h-[22px] aspect-square'
-            />
-            <UserPoints session={session} />
-          </section>
+          <Link href={"/sklep"}>
+            <section className='flex justify-center items-center gap-1'>
+              <Image
+                src={CoinsImage}
+                alt='Coins Image'
+                className='w-auto sm:h-[26px] h-[22px] aspect-square'
+              />
+              <UserPoints session={session} />
+            </section>
+          </Link>
+          <NotificationsIcon session={session} />
           <section className='flex justify-center items-center'>
             {isLoading || isError || !user ? (
               <div className='sm:w-[40px] w-[32px] sm:h-[40px] h-[32px] rounded-full bg-gray-300 animate-pulse'></div>
@@ -150,15 +147,6 @@ function NavLogged({ session }) {
               >
                 <Link onClick={() => setNavState(false)} href='/'>
                   Strona główna
-                </Link>
-              </li>
-              <li
-                className={`duration-200 ${
-                  pathname === "/dashboard" ? "active" : ""
-                }`}
-              >
-                <Link onClick={() => setNavState(false)} href='/dashboard'>
-                  Dashboard
                 </Link>
               </li>
               <li className='hover:text-descriptionColor duration-200'>

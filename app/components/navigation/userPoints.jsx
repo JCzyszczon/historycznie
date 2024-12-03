@@ -1,9 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { io } from "socket.io-client";
+import React from "react";
 import { useUserPoints } from "../../hooks/useUserPoints";
-
-//const socket = io("http://localhost:3001/points");
 
 const formatPoints = (points) => {
   if (points >= 10000) {
@@ -17,7 +14,7 @@ function UserPoints({ session }) {
 
   return (
     <>
-      {isLoading || isError || !points ? (
+      {isLoading || isError || points < 0 ? (
         <p className='w-[70px] h-[24px] animate-pulse bg-gray-300 rounded-lg'></p>
       ) : (
         <p className='text-textColor font-[500] text-base'>

@@ -6,7 +6,9 @@ export default function Notification({ notifications }) {
       {notifications.map((notification) => (
         <div
           key={notification.id}
-          className='bg-red-500 text-white px-6 font-medium py-2 rounded-lg shadow-lg animate-fade-in-out w-full'
+          className={`${
+            notification.type === "success" ? "bg-green-500" : "bg-red-500"
+          } text-white px-6 font-medium py-2 rounded-lg shadow-lg animate-fade-in-out w-full`}
         >
           {notification.message}
         </div>

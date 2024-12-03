@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useUser } from "../../hooks/useUser";
 import { useSession } from "next-auth/react";
@@ -9,34 +9,55 @@ import { FaClock } from "react-icons/fa6";
 import Image from "next/image";
 import { AnimatePresence } from "framer-motion";
 import EditModal from "../../components/editProfile/editModal";
-import { mutate } from "swr";
-import { isErrored } from "stream";
+import ProfileAchievements from "../../components/profileElements/profileAchievements";
+import ProfileBadges from "../../components/profileElements/profileBadges";
+import AchievementsModal from "../../components/profileElements/achievementsModal";
 
 export default function Home() {
   const { data: session } = useSession();
   const params = useParams();
-  const userId = params.id;
-  const { user, isLoading, isError } = useUser(userId);
+  const userId = params?.id;
+  const { user, isLoading, isError, mutate } = useUser(userId);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAchievementModalOpen, setIsAchievementModalOpen] = useState(false);
 
-  const handleClose = () => {
-    closeRequest();
-  };
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isModalOpen]);
+
+  useEffect(() => {
+    if (isAchievementModalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isAchievementModalOpen]);
 
   return (
     <>
       <section className='w-full flex flex-col bg-background2 justify-center items-center min-h-dvh px-2 py-20'>
-        <section className='w-full max-w-5xl min-h-[624px] bg-background rounded-2xl flex flex-col justify-start items-center overflow-hidden z-[1]'>
-          <section className='w-full h-[312px] relative'>
+        <section className='w-full max-w-5xl sm:h-[624px] h-[800px] bg-background rounded-2xl flex flex-col justify-start items-center overflow-hidden z-[1]'>
+          <section className='w-full sm:min-h-[360px] min-h-[320px] relative'>
             {isLoading || isError || !user ? (
-              <div className='w-full h-full flex bg-gray-300 animate-pulse'></div>
+              <div className='w-full sm:h-[360px] h-[320px] flex bg-gray-300 animate-pulse'></div>
             ) : (
               <Image
                 src={user.activeBanner.imageUrl}
                 width={1024}
-                height={312}
+                height={360}
+                quality={100}
                 alt='Profile Banner'
-                className='w-full h-full object-cover object-top'
+                className='w-full h-full object-cover object-center'
               />
             )}
             {!isLoading && session && userId === session.user.id && (
@@ -52,7 +73,7 @@ export default function Home() {
                 </div>
               </button>
             )}
-            <section className='absolute sm:left-4 left-1/2 sm:translate-x-0 -translate-x-1/2 top-4 h-[280px] bg-[#ffffffdd] drop-shadow-lg rounded-3xl w-full max-w-[240px] border border-borderColor gap-4 flex flex-col justify-start items-center px-4 py-4'>
+            <section className='absolute sm:left-4 left-1/2 sm:translate-x-0 -translate-y-1/2 -translate-x-1/2 top-1/2 h-[280px] bg-[#ffffffdd] drop-shadow-lg rounded-3xl w-full max-w-[240px] border border-borderColor gap-4 flex flex-col justify-start items-center px-4 py-4'>
               <div className='h-full'>
                 {isLoading || isError || !user ? (
                   <div className='w-[110px] h-[110px] rounded-full bg-gray-300 animate-pulse'></div>
@@ -100,7 +121,22 @@ export default function Home() {
               </section>
             </section>
           </section>
-          <p>T1</p>
+          <section className='w-full h-full flex sm:flex-row flex-col justify-center items-center sm:gap-6 gap-4 sm:px-4 px-2 sm:py-0 py-4'>
+            {isLoading || isError || !user ? (
+              <section className='w-full h-[220px] flex bg-gray-300 animate-pulse rounded-2xl'></section>
+            ) : (
+              <ProfileAchievements
+                userId={user?.id}
+                limit={3}
+                openAchievementModal={() => setIsAchievementModalOpen(true)}
+              />
+            )}
+            {isLoading || isError || !user ? (
+              <section className='w-full h-[220px] flex bg-gray-300 animate-pulse rounded-2xl'></section>
+            ) : (
+              <ProfileBadges userId={user?.id} />
+            )}
+          </section>
         </section>
       </section>
       <AnimatePresence initial={false} mode='wait' onExitComplete={() => null}>
@@ -109,6 +145,14 @@ export default function Home() {
             user={user}
             mutateUser={mutate}
             closeModal={() => setIsModalOpen(false)}
+          />
+        )}
+      </AnimatePresence>
+      <AnimatePresence initial={false} mode='wait' onExitComplete={() => null}>
+        {isAchievementModalOpen && (
+          <AchievementsModal
+            userId={user?.id}
+            closeAchievementsModal={() => setIsAchievementModalOpen(false)}
           />
         )}
       </AnimatePresence>

@@ -1,6 +1,6 @@
 import React from "react";
 import Input from "../../components/elements/Input";
-import RegistrationImage from "../../img/e69974f04b05dcf07f2a.svg";
+import Castle from "../../img/castle.png";
 import Image from "next/image";
 
 function Step1({
@@ -13,11 +13,7 @@ function Step1({
 }) {
   return (
     <>
-      <Image
-        src={RegistrationImage}
-        alt='RegistrationImage'
-        className='h-[74px]'
-      />
+      <Image src={Castle} alt='RegistrationImage' className='h-auto w-[74px]' />
       <h1 className='text-2xl font-[900] tracking-wide text-center font-nunito'>
         Załóż konto!
       </h1>

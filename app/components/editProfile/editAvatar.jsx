@@ -4,6 +4,7 @@ import { useSetActiveAvatar } from "../../hooks/useSetActiveAvatar";
 import Image from "next/image";
 import Button from "../elements/Button";
 import MoneyBag from "../../img/money-bag.png";
+import LoadingElement from "../elements/loadingElement";
 
 function EditAvatar({ user, mutateUser }) {
   const { avatars, isLoading, isError } = usePurchasedAvatars(user.id);
@@ -15,13 +16,15 @@ function EditAvatar({ user, mutateUser }) {
   };
 
   return (
-    <section className='w-full flex flex-col justify-start items-center gap-2 overflow-y-scroll custom-scrollbar'>
+    <section className='w-full h-full flex flex-col justify-start items-center gap-2 overflow-y-scroll custom-scrollbar'>
       {isLoading || isError || !avatars ? (
-        <p>Ładowanie...</p>
+        <section className='w-full h-full flex justify-center items-center'>
+          <LoadingElement variant='primary' />
+        </section>
       ) : (
         <section
-          className={`w-full grid-panel sm:py-12 py-8 sm:px-8 px-4 ${
-            avatars.length > 1 ? "justify-center" : "justify-start"
+          className={`w-full grid-panel-avatars sm:py-12 py-8 sm:px-8 px-4 ${
+            avatars.length > 2 ? "justify-center" : "justify-start"
           }`}
         >
           {avatars.map((avatar) => (
@@ -55,7 +58,7 @@ function EditAvatar({ user, mutateUser }) {
               )}
             </section>
           ))}
-          <div className='p-4 border border-primaryColor rounded-xl flex flex-col justify-between items-center gap-2 relative'>
+          <section className='p-4 border border-primaryColor rounded-xl flex flex-col justify-between items-center gap-2 relative'>
             <span className='w-full max-w-[80px] px-2 py-[3px] rounded-xl absolute -top-[12px] left-1/2 -translate-x-1/2 text-xs font-bold text-background bg-primaryColor'>
               Nowość
             </span>
@@ -67,10 +70,15 @@ function EditAvatar({ user, mutateUser }) {
               className='sm:w-20 w-16 sm:h-20 h-16'
             />
             <p className='font-notino font-[600] sm:text-base text-sm'>
-              Odkryj przedmioty
+              Odkryj awatary
             </p>
-            <Button variant='primary'>Sklep</Button>
-          </div>
+            <Button
+              variant='primary'
+              onClick={() => (window.location.href = "/sklep")}
+            >
+              Sklep
+            </Button>
+          </section>
         </section>
       )}
     </section>

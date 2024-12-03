@@ -1,14 +1,27 @@
 "use client";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { motion } from "framer-motion";
 import EditNavbar from "./editNavbar";
 import EditAvatar from "./editAvatar";
 import EditBanner from "./editBanner";
+import EditBadges from "./editBadges";
+import EditData from "./editData";
+import Notification from "../notification";
 
 export default function EditModal({ closeModal, user, mutateUser }) {
   const modalRef = useRef(null);
   const [activePanel, setActivePanel] = useState("Avatars");
+  const [notifications, setNotifications] = useState([]);
+
+  const addNotification = (message, type = "error") => {
+    const id = Date.now();
+    setNotifications((prev) => [...prev, { id, message, type }]);
+
+    setTimeout(() => {
+      setNotifications((prev) => prev.filter((notif) => notif.id !== id));
+    }, 2000);
+  };
 
   const handleOutsideClick = (event) => {
     if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -47,11 +60,24 @@ export default function EditModal({ closeModal, user, mutateUser }) {
             <EditAvatar user={user} mutateUser={mutateUser} />
           ) : activePanel === "Banners" ? (
             <EditBanner user={user} mutateUser={mutateUser} />
+          ) : activePanel === "Badges" ? (
+            <EditBadges
+              user={user}
+              mutateUser={mutateUser}
+              addNotification={addNotification}
+            />
+          ) : activePanel === "Data" ? (
+            <EditData
+              user={user}
+              mutateUser={mutateUser}
+              addNotification={addNotification}
+            />
           ) : (
             <></>
           )}
         </motion.section>
       </section>
+      <Notification notifications={notifications} />
     </section>
   );
 }

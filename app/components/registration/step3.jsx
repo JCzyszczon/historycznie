@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import RegistrationImage from "../../img/e69974f04b05dcf07f2a.svg";
+import Castle from "../../img/castle.png";
 import Image from "next/image";
 
 function Step3({ verificationCodeError, onVerificationCodeChange }) {
@@ -25,11 +25,7 @@ function Step3({ verificationCodeError, onVerificationCodeChange }) {
 
   return (
     <>
-      <Image
-        src={RegistrationImage}
-        alt='RegistrationImage'
-        className='h-[74px]'
-      />
+      <Image src={Castle} alt='RegistrationImage' className='h-auto w-[74px]' />
       <h1 className='text-2xl font-[900] tracking-wide text-center font-nunito'>
         Zweryfikuj e-mail!
       </h1>

@@ -110,7 +110,7 @@ export default function LoginPanel() {
             lub
           </span>
         </div>
-        <Button variant='secondary'>
+        <Button variant='secondary' onClick={() => signIn("google")}>
           <Image
             src={GoogleIcon}
             alt='Google Icon'
