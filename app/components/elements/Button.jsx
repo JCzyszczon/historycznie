@@ -6,7 +6,11 @@ function Button({ className, children, variant, type = "button", ...props }) {
       {...props}
       type={type}
       className={`${
-        variant === "primary" ? "button-primary" : "button-secondary"
+        variant === "primary"
+          ? "button-primary"
+          : variant === "bad"
+          ? "button-bad"
+          : "button-secondary"
       } disabled:cursor-not-allowed ${className}`}
     >
       {children}

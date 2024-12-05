@@ -42,6 +42,8 @@
   --primaryColor: #58cc02;
   --secondaryColor: #58a700;
   --borderColor: #d1d5db;
+  --redColor: #ff2400;
+  --redSecondaryColor: #d30000;
 }
 
 body {
@@ -178,6 +180,10 @@ input:-webkit-autofill:active {
   z-index: -1;
 }
 
+.button-secondary:after .correctAnswer {
+  background-color: var(--primaryColor) !important;
+}
+
 .button-secondary,
 .button-secondary:focus {
   user-select: auto;
@@ -195,6 +201,75 @@ input:-webkit-autofill:active {
 .button-secondary:active {
   border-width: 4px 0 0;
   background: none;
+}
+
+.button-bad {
+  appearance: button;
+  background-color: var(--redSecondaryColor);
+  border: solid transparent;
+  border-radius: 16px;
+  border-width: 0 0 4px;
+  box-sizing: border-box;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: din-round, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  line-height: 20px;
+  margin: 0;
+  outline: none;
+  overflow: visible;
+  padding: 13px 16px;
+  text-align: center;
+  text-transform: uppercase;
+  touch-action: manipulation;
+  transform: translateZ(0);
+  transition: filter 0.2s;
+  user-select: none;
+  -webkit-user-select: none;
+  vertical-align: middle;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.button-bad:after {
+  background-clip: padding-box;
+  background-color: var(--redColor);
+  border: solid transparent;
+  border-radius: 16px;
+  border-width: 0 0 4px;
+  bottom: -4px;
+  content: "";
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: -1;
+}
+
+.button-bad,
+.button-bad:focus {
+  user-select: auto;
+}
+
+.button-bad:hover:not(:disabled) {
+  filter: brightness(1.1);
+  -webkit-filter: brightness(1.1);
+}
+
+.button-bad:disabled {
+  cursor: auto;
+}
+
+.button-bad:active {
+  border-width: 4px 0 0;
+  background: none;
+}
+
+.button-bad .limited-width {
+  max-width: 150px !important;
 }
 
 @keyframes fadeInOut {

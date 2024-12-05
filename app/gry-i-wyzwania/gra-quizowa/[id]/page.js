@@ -13,7 +13,9 @@ import KingImage from "../../../img/king.png";
 import CrownHost from "../../../img/crown-host.png";
 import { MdEdit } from "react-icons/md";
 import RoomEditModal from "../../../components/room/roomEditModal";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import CastleImage from "../../../img/castle.png";
+import GameEndModal from "../../../components/room/gameEndModal";
 
 const socket = io(process.env.NEXT_PUBLIC_BACKEND_URL, {
   transports: ["websocket"],
@@ -33,6 +35,16 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [isRoomEditModalOpen, setIsRoomEditModalOpen] = useState(false);
   const [messages, setMessages] = useState([]);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(10);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [questionStartTime, setQuestionStartTime] = useState();
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [isCorrect, setIsCorrect] = useState(null);
+  const [isAnswered, setIsAnswered] = useState(false);
+  const [updateRanking, setUpdateRanking] = useState();
+  const [openEndModal, setOpenEndModal] = useState(false);
 
   useEffect(() => {
     if (isRoomEditModalOpen) {
@@ -47,11 +59,64 @@ export default function Home() {
 
   useEffect(() => {
     socket.on("roomSettingsUpdated", (updatedRoom) => {
-      setRoomInfo(updatedRoom); // Aktualizowanie danych pokoju w stanie
+      setRoomInfo(updatedRoom);
     });
 
     return () => {
-      socket.off("roomSettingsUpdated"); // Oczyszczanie po zakończeniu komponentu
+      socket.off("roomSettingsUpdated");
+    };
+  }, []);
+
+  useEffect(() => {
+    socket.on("gameStarted", ({ roomId, gameId, question, questionIndex }) => {
+      setGameStarted(true);
+      //setCurrentQuestion(question); // Ustaw pierwsze pytanie
+      //setCurrentQuestionIndex(questionIndex);
+      setTimeLeft(10); // Resetuj czas
+    });
+
+    socket.on("nextQuestion", ({ question, questionIndex }) => {
+      setCurrentQuestion(question);
+      setCurrentQuestionIndex(questionIndex);
+      setTimeLeft(10); // Resetuj czas na nowe pytanie
+      setQuestionStartTime(Date.now());
+      setIsAnswered(false);
+    });
+
+    return () => {
+      socket.off("gameStarted");
+      socket.off("nextQuestion");
+    };
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (timeLeft > 0) {
+        setTimeLeft(timeLeft - 1);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [timeLeft]);
+
+  useEffect(() => {
+    socket.on("updateRanking", ({ ranking }) => {
+      setUpdateRanking(ranking);
+    });
+
+    return () => {
+      socket.off("updateRanking");
+    };
+  }, []);
+
+  useEffect(() => {
+    socket.on("gameEnded", ({ ranking }) => {
+      setUpdateRanking(ranking);
+      setOpenEndModal(true);
+    });
+
+    return () => {
+      socket.off("gameEnded");
     };
   }, []);
 
@@ -128,15 +193,35 @@ export default function Home() {
   const handleSaveRoomSettings = (updatedRoomData) => {
     socket.emit("updateRoomSettings", { roomId, updatedRoomData });
     console.log("Zaktualizowano dane pokoju:", updatedRoomData);
-    //console.log(updatedRoomData);
   };
 
-  if (error) {
-    return <p className='text-red-500'>Error: {error}</p>;
-  }
+  const handleStartGame = () => {
+    if (roomInfo.hostId === userId) {
+      socket.emit("startGame", { roomId, userId });
+      setGameStarted(true);
+    }
+  };
 
-  console.log(players);
-  //console.log(roomInfo);
+  const handleAnswerClick = (selectedAnswer) => {
+    setIsAnswered(true);
+    // Oblicz czas odpowiedzi
+    const responseTime = Date.now() - questionStartTime;
+
+    setSelectedAnswer(selectedAnswer);
+    const isAnswerCorrect = selectedAnswer === currentQuestion.correct;
+    setIsCorrect(isAnswerCorrect);
+
+    // Wyślij odpowiedź na serwer
+    socket.emit("submitAnswer", {
+      roomId: roomId,
+      userId: userId,
+      gameQuestionId: currentQuestion.gameQuestionId,
+      answer: selectedAnswer,
+      responseTime: responseTime,
+    });
+  };
+
+  console.log(updateRanking);
 
   return (
     <>
@@ -147,7 +232,7 @@ export default function Home() {
         >
           <FaArrowLeft />
         </button>
-        {isLoading || status === "loading" ? (
+        {isLoading || status === "loading" || error ? (
           <section className='flex flex-col justify-center items-center gap-4'>
             <LoadingElement variant='primary' />
             <h2 className='text-descriptionColor text-lg font-bold'>
@@ -267,6 +352,8 @@ export default function Home() {
               <section className='w-full flex justify-center items-center'>
                 <Button
                   variant={roomInfo.hostId === userId ? "primary" : "secondary"}
+                  disabled={roomInfo.hostId !== userId}
+                  onClick={handleStartGame}
                 >
                   {roomInfo.hostId === userId ? "Start" : "Oczekiwanie.."}
                 </Button>
@@ -282,6 +369,131 @@ export default function Home() {
             initialRoomData={roomInfo}
             onSave={handleSaveRoomSettings}
           />
+        )}
+      </AnimatePresence>
+      <AnimatePresence initial={false} mode='wait' onExitComplete={() => null}>
+        {gameStarted && (
+          <section className='w-screen min-h-dvh z-[1100] fixed left-0 top-0 right-0 overflow-x-hidden overflow-y-scroll bg-[#11111199]'>
+            <section className='w-screen min-h-dvh bg-background2 rounded-2xl flex lg:flex-row flex-col justify-center items-center gap-4 px-2 py-8'>
+              <motion.section
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3 }}
+                className='w-full max-w-5xl h-full min-h-[700px] flex flex-col justify-between items-center gap-6 bg-background rounded-2xl px-6 py-12 border border-borderColor shadow-lg relative'
+              >
+                {currentQuestion ? (
+                  <>
+                    <div className='absolute right-4 top-4 w-[60px] h-[60px] flex justify-center items-center border-2 border-primaryColor rounded-full'>
+                      <p
+                        className={`font-extrabold text-lg ${
+                          timeLeft < 4 ? "text-primaryColor" : "text-textColor"
+                        }`}
+                      >
+                        {timeLeft}
+                      </p>
+                    </div>
+                    <section className='w-full flex flex-col justify-start items-start gap-6 h-full'>
+                      <section className='w-full flex justify-center items-center'>
+                        <Image
+                          src={CastleImage}
+                          alt='Castle Image'
+                          width={100}
+                          height={100}
+                          className='w-[100px] h-[100px]'
+                        />
+                      </section>
+                      <h2 className='w-full text-3xl font-nunito font-bold text-center'>{`Pytanie ${currentQuestionIndex}/${roomInfo.questionsCount}`}</h2>
+                      <section className='w-full flex justify-start items-start h-full'>
+                        <section className='w-full flex justify-start items-center bg-background2 rounded-lg px-8 py-8'>
+                          <p className='font-[500] text-base'>
+                            {currentQuestion?.text}
+                          </p>
+                        </section>
+                      </section>
+                    </section>
+                    <section className='w-full grid grid-cols-2 gap-4 auto-rows-[1fr]'>
+                      {currentQuestion?.options.map((option, index) => {
+                        const isSelected = selectedAnswer === option;
+
+                        return (
+                          <Button
+                            disabled={isAnswered}
+                            key={index}
+                            variant={
+                              isSelected && isCorrect
+                                ? "primary"
+                                : isSelected && !isCorrect
+                                ? "bad"
+                                : "secondary"
+                            }
+                            onClick={() => handleAnswerClick(option)}
+                            className={`!h-[100px] !flex !justify-center !items-center`}
+                          >
+                            {option}
+                          </Button>
+                        );
+                      })}
+                    </section>
+                  </>
+                ) : (
+                  <section className='w-full h-full min-h-[500px] flex justify-center items-center'>
+                    <section className='flex flex-col justify-center items-center gap-4'>
+                      <div className='w-[60px] h-[60px] flex justify-center items-center border-2 border-primaryColor rounded-full'>
+                        <p className='font-extrabold text-lg text-textColor'>
+                          {timeLeft}
+                        </p>
+                      </div>
+                      <p className='text-lg font-[500]'>Startowanie gry</p>
+                    </section>
+                  </section>
+                )}
+              </motion.section>
+              <motion.section
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3 }}
+                className='w-full max-w-lg h-full min-h-[700px] flex flex-col gap-6 bg-background rounded-2xl px-6 py-12 border border-borderColor shadow-lg'
+              >
+                <h2 className='text-2xl font-nunito font-bold text-center'>
+                  Ranking graczy
+                </h2>
+                {updateRanking ? (
+                  <section className='w-full flex flex-col justify-start items-start gap-4'>
+                    {updateRanking.map((player, index) => (
+                      <section
+                        key={index}
+                        className='w-full flex justify-between items-center gap-2'
+                      >
+                        <div className='flex justify-start items-center gap-4'>
+                          <p className='text-xl w-[24px]'>{player.position}.</p>
+                          <Image
+                            src={player.avatar}
+                            alt='User Avatar'
+                            width={40}
+                            height={40}
+                            className='w-[40px] h-[40px]'
+                          />
+                          <p className='text-xl'>{player.username}</p>
+                        </div>
+                        <p className='text-xl font-bold'>{player.score} pkt</p>
+                      </section>
+                    ))}
+                  </section>
+                ) : (
+                  <section className='w-full h-full flex justify-center items-center'>
+                    <p>Brak informacji o rankingu.</p>
+                  </section>
+                )}
+              </motion.section>
+            </section>
+          </section>
+        )}
+      </AnimatePresence>
+      <AnimatePresence initial={false} mode='wait' onExitComplete={() => null}>
+        {openEndModal && (
+          <GameEndModal updateRanking={updateRanking} playerId={userId} />
         )}
       </AnimatePresence>
     </>
