@@ -9,7 +9,7 @@ export default async function Home() {
   return (
     <>
       <section className='w-full flex flex-col bg-background2 justify-center items-center min-h-screen'>
-        <p>Hello world!</p>
+        <p>Strona główna</p>
       </section>
     </>
   );
