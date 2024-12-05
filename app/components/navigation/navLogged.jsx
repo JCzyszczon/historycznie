@@ -69,7 +69,7 @@ function NavLogged({ session }) {
                 pathname === "/gry-i-wyzwania" ? "active" : ""
               }`}
             >
-              Gry i wyzwania
+              <Link href='/gry-i-wyzwania'>Gry i wyzwania</Link>
             </li>
           </ul>
         </nav>
@@ -152,8 +152,14 @@ function NavLogged({ session }) {
               <li className='hover:text-descriptionColor duration-200'>
                 Lekcje
               </li>
-              <li className='hover:text-descriptionColor duration-200'>
-                Gry i wyzwania
+              <li
+                className={`duration-200 ${
+                  pathname === "/" ? "active" : ""
+                } hover:text-descriptionColor duration-200`}
+              >
+                <Link onClick={() => setNavState(false)} href='/gry-i-wyzwania'>
+                  Gry i wyzwania
+                </Link>
               </li>
             </ul>
           </motion.section>

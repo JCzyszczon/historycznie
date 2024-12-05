@@ -270,9 +270,22 @@ input:-webkit-autofill:active {
   gap: 16px;
 }
 
+.grid-room-sqares {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(auto, 200px));
+  grid-auto-rows: 1fr;
+  gap: 16px;
+  text-align: center;
+}
+
 @media (max-width: 639px) {
   .grid-panel-avatars {
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
+  }
+
+  .grid-room-sqares {
+    grid-template-columns: repeat(auto-fit, 100%);
+    gap: 12px;
   }
 }
