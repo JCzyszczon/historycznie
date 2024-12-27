@@ -1,6 +1,8 @@
 {
   "name": "Historycznie",
   "short_name": "Historycznie",
+  "description": "Next.js App",
+  "start_url": "/",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
