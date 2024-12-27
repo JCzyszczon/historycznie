@@ -85,15 +85,15 @@ export default function Home() {
             </Button>
           </section>
           {isLoading || isError ? (
-            <section className='w-full h-full flex justify-center items-center gap-4'>
+            <section className='w-full h-full sm:min-h-0 min-h-[400px] flex justify-center items-center gap-4'>
               <LoadingElement variant='primary' />
             </section>
           ) : (
             <>
               {rooms.length < 1 ? (
-                <section className='w-full h-full flex flex-col justify-center items-center gap-4'>
+                <section className='w-full h-full sm:min-h-0 min-h-[400px] flex flex-col justify-center items-center gap-4'>
                   <FaCircleInfo className='text-4xl text-descriptionColor' />
-                  <p className='text-base text-descriptionColor text-center'>
+                  <p className='text-base text-descriptionColor text-center font-[500]'>
                     Obecnie nie ma żadnych aktywnych poczekalni.
                   </p>
                 </section>

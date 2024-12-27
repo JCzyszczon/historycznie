@@ -68,8 +68,8 @@ export default function AchievementsModal({ closeAchievementsModal, userId }) {
                     <section className='w-full max-w-[100px] flex min-h-[100px] rounded-2xl h-full bg-background2 justify-center items-center'>
                       <Image
                         src={achievement.achievement.iconUrl}
-                        width={60}
-                        height={60}
+                        width={160}
+                        height={160}
                         className='sm:w-[60px] w-[50px] sm:h-[60px] h-[50px]'
                         alt={achievement.achievement.name}
                       />

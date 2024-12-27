@@ -43,6 +43,15 @@ export default function Home() {
     };
   }, [isAchievementModalOpen]);
 
+  useEffect(() => {
+    if (user) {
+      const userName = user.username;
+      document.title = userName
+        ? `${userName} - Historycznie`
+        : "Profil - Historycznie";
+    }
+  }, [user, isLoading, isError]);
+
   return (
     <>
       <section className='w-full flex flex-col bg-background2 justify-center items-center min-h-dvh px-2 py-20'>

@@ -4,6 +4,7 @@ import Button from "../elements/Button";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
+import Logo from "../elements/Logo";
 
 function NavUnlogged() {
   const [navState, setNavState] = useState(false);
@@ -22,7 +23,7 @@ function NavUnlogged() {
   return (
     <>
       <section className='w-full max-w-5xl flex justify-between items-center gap-4'>
-        <h2>Logo</h2>
+        <Logo />
         <section className='w-full sm:flex hidden justify-end flex-wrap items-center box-border gap-2'>
           <Button
             onClick={() => signIn()}

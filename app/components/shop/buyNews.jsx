@@ -193,8 +193,8 @@ function BuyNews({ userId, userPoints, pointsMutate, addNotification }) {
                   <Image
                     src={badge.iconUrl}
                     alt={badge.name}
-                    width={80}
-                    height={80}
+                    width={160}
+                    height={160}
                     className='sm:w-20 w-16 sm:h-20 h-16 rounded-full'
                   />
                   <p className='font-notino font-[600] sm:text-base text-sm mt-2'>

@@ -31,11 +31,12 @@ export default function RoomModal({ closeModal }) {
     hostId: userId,
     gameMode: "",
     questionsCount: 10,
-    category: "",
+    category: "Wszystkie",
     password: "",
   });
 
   const categories = [
+    "Wszystkie",
     "Starożytność",
     "Średniowiecze",
     "Nowożytność",
@@ -106,7 +107,7 @@ export default function RoomModal({ closeModal }) {
               <Input
                 type='text'
                 name='name'
-                labelText='Nazwa pokoju:'
+                labelText='Nazwa pokoju'
                 value={formData.name}
                 onChange={handleChange}
               />
@@ -116,7 +117,7 @@ export default function RoomModal({ closeModal }) {
                     htmlFor={"questionsCount"}
                     className='block mb-2 text-sm font-extrabold font-nunito text-gray-900'
                   >
-                    Liczba pytań:
+                    Liczba pytań
                   </label>
                 </section>
                 <select
@@ -138,10 +139,10 @@ export default function RoomModal({ closeModal }) {
                     htmlFor={"questionsCount"}
                     className='block mb-2 text-sm font-extrabold font-nunito text-gray-900'
                   >
-                    Kategoria:
+                    Kategoria
                   </label>
                 </section>
-                <section className='w-full flex flex-wrap gap-4'>
+                <section className='w-full grid grid-cols-2 gap-4'>
                   {categories.map((cat) => (
                     <button
                       key={cat}
@@ -149,10 +150,10 @@ export default function RoomModal({ closeModal }) {
                       onClick={() =>
                         setFormData((prev) => ({ ...prev, category: cat }))
                       }
-                      className={`p-2 rounded-md ${
+                      className={`p-2 rounded-md duration-200 ${
                         formData.category === cat
                           ? "bg-primaryColor text-white"
-                          : "bg-borderColor text-descriptionColor"
+                          : "bg-gray-200 text-gray-400"
                       }`}
                     >
                       {cat}
@@ -165,7 +166,7 @@ export default function RoomModal({ closeModal }) {
                 name='password'
                 value={formData.password}
                 onChange={handleChange}
-                labelText='Hasło (opcjonalne):'
+                labelText='Hasło (opcjonalne)'
               />
             </section>
             <section className='w-full flex justify-center items-center px-4 pb-8'>

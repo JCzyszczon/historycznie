@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { IoMdClose } from "react-icons/io";
 import { motion } from "framer-motion";
 import Button from "../elements/Button";
 import Input from "../elements/Input";
@@ -31,7 +30,6 @@ export default function RoomEditModal({
     }, 2000);
   };
 
-  // Stany dla danych pokoju
   const [roomName, setRoomName] = useState(initialRoomData?.name || "");
   const [questionsCount, setQuestionsCount] = useState(
     initialRoomData?.questionsCount || 0

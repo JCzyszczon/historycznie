@@ -41,11 +41,10 @@ function ProfileAchievements({ userId, limit, openAchievementModal }) {
                 <div className='w-full h-full sm:max-h-[120px] max-h-[100px] flex justify-center items-center rounded-2xl bg-background2 drop-shadow-lg '>
                   <Image
                     src={achievement.achievement.iconUrl}
-                    width={60}
-                    height={60}
+                    width={160}
+                    height={160}
                     className='sm:w-[60px] w-[50px] sm:h-[60px] h-[50px]'
                     alt={achievement.achievement.name}
-                    quality={100}
                   />
                 </div>
                 <h4 className='w-[calc(100%-1px)] text-center font-[500] text-sm text-descriptionColor text-nowrap overflow-hidden text-ellipsis'>

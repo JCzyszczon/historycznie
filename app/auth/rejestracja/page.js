@@ -6,6 +6,12 @@ import { IoClose } from "react-icons/io5";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
+export const metadata = {
+  title: "Rejestracja - Historycznie",
+  description:
+    "Zarejestruj się już teraz, aby odkryć wszystkie atrakcje na stronie!",
+};
+
 export default async function Home() {
   const session = await getServerSession(authOptions);
 

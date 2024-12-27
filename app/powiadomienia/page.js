@@ -9,6 +9,7 @@ import TrumpetIcon from "../img/trumpet.png";
 import AwardIcon from "../img/award.png";
 import Button from "../components/elements/Button";
 import { FaCheck } from "react-icons/fa";
+import { FaCircleInfo } from "react-icons/fa6";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -16,22 +17,36 @@ export default function Home() {
   const { notifications, isLoading, isError, markAllAsRead, markAsRead } =
     useNotifications(userId);
 
+  useEffect(() => {
+    if (notifications) {
+      const unreadCount = notifications.filter((n) => !n.isRead).length;
+      document.title = unreadCount
+        ? `(${unreadCount}) Powiadomienia - Historycznie`
+        : "Powiadomienia - Historycznie";
+    }
+  }, [notifications, isLoading, isError]);
+
   return (
     <section className='w-full flex flex-col bg-background2 justify-center items-center min-h-dvh px-2 py-20'>
-      <section className='w-full max-w-2xl h-[700px] flex justify-start items-start rounded-2xl flex-col bg-background sm:px-8 px-2 py-12 gap-8 overflow-y-scroll custom-scrollbar'>
+      <section className='w-full max-w-2xl sm:h-[700px] sm:min-h-0 min-h-[700px] h-auto flex justify-start items-start rounded-2xl flex-col bg-background sm:px-8 px-2 py-12 gap-8'>
         <section className='w-full flex justify-center items-center'>
           <h1 className='font-nunito text-2xl font-extrabold tracking-wide text-center'>
             Powiadomienia
           </h1>
         </section>
         {isLoading || isError || !notifications ? (
-          <section className='w-full h-full flex justify-center items-center'>
+          <section className='w-full h-full min-h-[400px] flex justify-center items-center'>
             <LoadingElement variant={"primary"} />
           </section>
         ) : (
           <section className='w-full h-full flex flex-col justify-start items-start gap-2'>
             {notifications.length === 0 ? (
-              <p>Brak powiadomień w ciągu ostatnich 7 dni.</p>
+              <section className='w-full h-full min-h-[400px] flex flex-col justify-center items-center gap-4'>
+                <FaCircleInfo className='text-4xl text-descriptionColor' />
+                <p className='sm:text-base text-sm text-descriptionColor text-center'>
+                  Brak powiadomień w ciągu ostatnich 7 dni.
+                </p>
+              </section>
             ) : (
               <>
                 <section className='w-full flex justify-end items-center'>

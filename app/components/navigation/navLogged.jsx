@@ -9,6 +9,7 @@ import CoinsImage from "../../img/5252389.png";
 import UserPoints from "./userPoints";
 import { useUser } from "../../hooks/useUser";
 import NotificationsIcon from "./notificationsIcon";
+import Logo from "../elements/Logo";
 
 function NavLogged({ session }) {
   const { user, isLoading, isError } = useUser(session.user.id);
@@ -50,10 +51,10 @@ function NavLogged({ session }) {
     <>
       <section className='w-full max-w-5xl flex justify-between items-center gap-4 relative z-[100]'>
         <section className='sm:w-full w-auto flex justify-start items-center'>
-          <h2>Logo</h2>
+          <Logo />
         </section>
-        <nav className='w-full sm:flex hidden justify-end items-center gap-4 text-lg font-bold font-nunito text-borderColor relative'>
-          <ul className='w-full sm:flex hidden justify-center flex-nowrap text-nowrap items-center gap-6 navbar-menu'>
+        <nav className='w-full sm:flex hidden justify-end items-center gap-4 lg:text-lg text-base font-bold font-nunito text-borderColor relative'>
+          <ul className='w-full sm:flex hidden justify-center flex-nowrap text-nowrap items-center lg:gap-6 gap-4 navbar-menu'>
             <li className={`duration-200 ${pathname === "/" ? "active" : ""}`}>
               <Link href='/'>Strona główna</Link>
             </li>
@@ -87,7 +88,7 @@ function NavLogged({ session }) {
           <NotificationsIcon session={session} />
           <section className='flex justify-center items-center'>
             {isLoading || isError || !user ? (
-              <div className='sm:w-[40px] w-[32px] sm:h-[40px] h-[32px] rounded-full bg-gray-300 animate-pulse'></div>
+              <div className='lg:w-[40px] w-[32px] lg:h-[40px] h-[32px] rounded-full bg-gray-300 animate-pulse'></div>
             ) : (
               <Image
                 ref={profileRef}
@@ -96,7 +97,7 @@ function NavLogged({ session }) {
                 width={40}
                 height={40}
                 alt='Profile Avatar'
-                className='sm:w-[40px] w-[32px] sm:h-[40px] h-[32px] rounded-full'
+                className='lg:w-[40px] w-[32px] lg:h-[40px] h-[32px] rounded-full'
               />
             )}
           </section>
@@ -154,7 +155,7 @@ function NavLogged({ session }) {
               </li>
               <li
                 className={`duration-200 ${
-                  pathname === "/" ? "active" : ""
+                  pathname === "/gry-i-wyzwania" ? "active" : ""
                 } hover:text-descriptionColor duration-200`}
               >
                 <Link onClick={() => setNavState(false)} href='/gry-i-wyzwania'>
