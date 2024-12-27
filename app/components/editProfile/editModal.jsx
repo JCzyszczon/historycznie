@@ -34,10 +34,10 @@ export default function EditModal({ closeModal, user, mutateUser }) {
   };
 
   return (
-    <section className='w-screen min-h-[100vh] max-h-[100px] z-[1100] fixed left-0 top-0 right-0 overflow-x-hidden overflow-y-scroll bg-[#11111199]'>
+    <section className='w-screen min-h-dvh max-h-[100px] z-[1100] fixed left-0 top-0 right-0 overflow-x-hidden overflow-y-scroll bg-[#11111199]'>
       <section
         onClick={handleOutsideClick}
-        className='w-screen min-h-[100vh] z-[1101] flex flex-col justify-center items-center px-2 py-8'
+        className='w-screen min-h-dvh z-[1101] flex flex-col justify-center items-center px-2 py-8'
       >
         <motion.section
           initial={{ opacity: 0 }}
