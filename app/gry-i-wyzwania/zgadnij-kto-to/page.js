@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Button from "../../components/elements/Button";
@@ -161,7 +161,7 @@ export default function DailyChallenge() {
   };
 
   return (
-    <Suspense fallback={<div>Ładowanie...</div>}>
+    <>
       <section className='w-full flex flex-col bg-background2 sm:justify-center justify-start items-center min-h-dvh px-2 py-20 relative'>
         <button
           onClick={() => setIsGuessGameLeaveModalOpen(true)}
@@ -287,6 +287,6 @@ export default function DailyChallenge() {
           <GuessWhoFinishModal results={finalResults} gameData={gameData} />
         )}
       </AnimatePresence>
-    </Suspense>
+    </>
   );
 }

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Inter, Nunito } from "next/font/google";
 import "../../globals.css";
 import { Providers } from "../../providers";
@@ -23,7 +24,7 @@ export default function AuthLayout({ children }) {
     <html lang='pl'>
       <body className={`${inter.variable} ${nunito.variable}`}>
         <Providers>
-          {children}
+          <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
           <ToastContainer position='top-right' autoClose={3000} />
         </Providers>
       </body>
