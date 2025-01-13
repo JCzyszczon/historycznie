@@ -58,7 +58,7 @@ export default function GuessGamesModal({ closeGuessGamesModal, userId }) {
             />
             <section className='w-full h-min flex justify-center items-center px-2'>
               <h2 className='font-nunito text-2xl font-extrabold tracking-wide text-center'>
-                Historia gier quizowych
+                Historia gier
               </h2>
             </section>
             <section className='w-full h-full flex flex-col justify-start items-start gap-8 overflow-x-auto custom-scrollbar'>

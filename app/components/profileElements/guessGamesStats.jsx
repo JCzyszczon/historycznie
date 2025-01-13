@@ -23,7 +23,7 @@ function GuessGamesStats({ userId, handleGuessGamesModal }) {
     <section className='w-full flex flex-col justify-start items-center rounded-2xl bg-background gap-4 md:pl-8 md:pr-6 px-4 py-4'>
       <div className='w-full h-full max-h-[36px] flex gap-2 justify-between items-center'>
         <h3 className='w-full max-w-[205px] font-extrabold font-nunito tracking-wide text-nowrap overflow-hidden text-ellipsis'>
-          Gry w "Zgadnij kto to"
+          Gry w &quot;Zgadnij kto to&quot;
         </h3>
         {!isLoading && !isError && gameResults.length > 0 && (
           <Button
