@@ -17,6 +17,8 @@ import MedievalImage from "../../img/średniowiecze.jpg";
 import ModernEraImage from "../../img/nowożytność.jpg";
 import WorldWarImage from "../../img/współczesność.png";
 import { motion } from "framer-motion";
+import TempleImage from "../../img/2210_w015_n003_1037b_p15_1037.jpg";
+import Battle from "../../img/battle-2.png";
 
 const charVariants = {
   hidden: { opacity: 0 },
@@ -42,11 +44,29 @@ function MainPanel2() {
   return (
     <>
       <section className='w-full flex flex-col bg-background2 justify-start items-center min-h-screen sm:pb-28 pb-20 overflow-x-hidden'>
-        <section className='w-full max-w-5xl min-h-screen flex sm:flex-row flex-col px-4'>
-          <section className='w-full flex flex-1 justify-center items-center'>
-            <p>Test</p>
+        <section className='w-full max-w-5xl sm:min-h-screen min-h-0 flex sm:flex-row flex-col gap-4 px-4'>
+          <section className='w-full flex flex-1 justify-center min-h-[300px] items-center md:pt-0 pt-32'>
+            <section className='w-full h-auto md:aspect-square aspect-auto relative rounded-2xl overflow-hidden drop-shadow-2xl'>
+              <Image
+                src={TempleImage}
+                alt='Temple Image'
+                className='w-full h-auto md:aspect-square aspect-auto object-cover brightness-50'
+              />
+              <span className='absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 flex flex-col gap-2 justify-center items-center select-none'>
+                <Image
+                  src={Battle}
+                  alt='Swords Icon'
+                  width={280}
+                  height={280}
+                  className='md:w-[80px] w-[40px] md:h-[80px] h-[40px]'
+                />
+                <h2 className='md:text-4xl text-xl font-extrabold font-nunito tracking-wide text-primaryColor duration-200 flex'>
+                  Historycznie
+                </h2>
+              </span>
+            </section>
           </section>
-          <section className='w-full flex flex-col gap-4 flex-1 justify-center items-center'>
+          <section className='w-full flex flex-col min-h-[600px] gap-4 flex-1 justify-center items-center'>
             <motion.h1
               initial='hidden'
               whileInView='reveal'
