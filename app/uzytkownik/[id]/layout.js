@@ -2,6 +2,7 @@ import { Inter, Nunito } from "next/font/google";
 import "../../globals.css";
 import { Providers } from "../../providers";
 import Navbar from "../../components/navigation/navbar";
+import { ToastContainer } from "react-toastify";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -29,6 +30,7 @@ export default function RootLayout({ children }) {
         <Providers>
           <Navbar />
           {children}
+          <ToastContainer position='top-right' autoClose={3000} />
         </Providers>
       </body>
     </html>

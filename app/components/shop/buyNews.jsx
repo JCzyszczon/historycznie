@@ -9,8 +9,9 @@ import LoadingElement from "../elements/loadingElement";
 import Image from "next/image";
 import CoinsImage from "../../img/5252389.png";
 import Button from "../elements/Button";
+import { toast } from "react-toastify";
 
-function BuyNews({ userId, userPoints, pointsMutate, addNotification }) {
+function BuyNews({ userId, userPoints, pointsMutate }) {
   const {
     avatars,
     isLoading: isLoadingAvatars,
@@ -37,46 +38,46 @@ function BuyNews({ userId, userPoints, pointsMutate, addNotification }) {
 
   const handlePurchaseAvatar = async (avatar) => {
     if (userPoints < avatar.price) {
-      addNotification("Nie masz wystarczającej liczby punktów.");
+      toast.error("Nie masz wystarczającej liczby punktów!");
       return;
     }
     try {
       await purchaseAvatar(userId, avatar.id);
-      addNotification("Pomyślnie zakupiono awatar.", "success");
+      toast.success("Pomyślnie zakupiono awatar.");
       avatarsMutate();
       pointsMutate();
     } catch (error) {
-      addNotification(error.message || "Nie udało się kupić awatara.");
+      toast.error(error.message || "Nie udało się kupić awatara.");
     }
   };
 
   const handlePurchaseBanner = async (avatar) => {
     if (userPoints < avatar.price) {
-      addNotification("Nie masz wystarczającej liczby punktów.");
+      toast.error("Nie masz wystarczającej liczby punktów!");
       return;
     }
     try {
       await purchaseBanner(userId, avatar.id);
-      addNotification("Pomyślnie zakupiono baner", "success");
+      toast.success("Pomyślnie zakupiono baner.");
       bannersMutate();
       pointsMutate();
     } catch (error) {
-      addNotification(error.message || "Nie udało się kupić baneru.");
+      toast.error(error.message || "Nie udało się kupić baneru.");
     }
   };
 
   const handlePurchaseBadge = async (badge) => {
     if (userPoints < badge.price) {
-      addNotification("Nie masz wystarczającej liczby punktów.");
+      toast.error("Nie masz wystarczającej liczby punktów!");
       return;
     }
     try {
       await purchaseBadge(userId, badge.id);
-      addNotification("Pomyślnie zakupiono odznakę", "success");
+      toast.success("Pomyślnie zakupiono odznakę.");
       badgesMutate();
       pointsMutate();
     } catch (error) {
-      addNotification(error.message || "Nie udało się kupić baneru.");
+      toast.error(error.message || "Nie udało się kupić odznaki.");
     }
   };
 
@@ -187,7 +188,7 @@ function BuyNews({ userId, userPoints, pointsMutate, addNotification }) {
             {badges.map((badge) => (
               <section
                 key={badge.id}
-                className='p-4 border border-borderColor bg-background rounded-xl flex flex-col justify-between items-center gap-6'
+                className='p-4 border sm:h-[248px] h-[228px] border-borderColor bg-background rounded-xl flex flex-col justify-between items-center gap-6'
               >
                 <div className='flex flex-col justify-between items-center'>
                   <Image
@@ -195,7 +196,7 @@ function BuyNews({ userId, userPoints, pointsMutate, addNotification }) {
                     alt={badge.name}
                     width={160}
                     height={160}
-                    className='sm:w-20 w-16 sm:h-20 h-16 rounded-full'
+                    className='sm:w-[64px] w-[52px] sm:h-[64px] h-[52px] rounded-full'
                   />
                   <p className='font-notino font-[600] sm:text-base text-sm mt-2'>
                     {badge.name}

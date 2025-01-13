@@ -11,19 +11,16 @@ function Step4() {
   return (
     <>
       <Image src={Castle} alt='RegistrationImage' className='h-auto w-[74px]' />
-      <Image
-        src={SuccessImage}
-        alt='Success Image'
-        className='w-full h-full rounded-2xl object-cover'
-      />
       <section className='h-full flex flex-col justify-start items-center gap-4 pt-4'>
         <h1 className='text-2xl font-[900] tracking-wide text-center font-nunito'>
           Witaj na pokładzie!
         </h1>
         <p className='pb-2 text-descriptionColor text-center'>
-          Zaloguj się i odkrywaj historię w zupełnie nowy sposób.
+          Zaloguj się i odkrywaj historię tak jak lubisz najbardziej.
         </p>
-        <Button variant='primary' onClick={handleClick} className='!mt-4'>
+      </section>
+      <section className='w-full pb-12'>
+        <Button variant='primary' onClick={handleClick} className=''>
           Zaloguj się
         </Button>
       </section>

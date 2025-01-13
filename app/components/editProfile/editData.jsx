@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import Button from "../elements/Button";
 import Input from "../elements/Input";
 import { useUpdateUser } from "../../hooks/useUpdateUser";
+import { toast } from "react-toastify";
 
-function EditData({ user, mutateUser, addNotification }) {
+function EditData({ user, mutateUser }) {
   const [username, setUsername] = useState(user.username);
   const [usernameError, setUsernameError] = useState(false);
   const [name, setName] = useState(user.name);
@@ -38,7 +39,7 @@ function EditData({ user, mutateUser, addNotification }) {
 
   const handleChangeData = async () => {
     if (!username && !name && !surname) {
-      addNotification("Pola nie mogą być puste.");
+      toast.error("Pola nie mogą być puste.");
       setNameError(true);
       setUsernameError(true);
       setSurnameError(true);
@@ -46,20 +47,19 @@ function EditData({ user, mutateUser, addNotification }) {
     }
 
     if (!username) {
-      addNotification("Pole nie może być puste.");
+      toast.error("Pole nie może być puste.");
       setUsernameError(true);
-      setLoading(false);
       return;
     }
 
     if (!name) {
-      addNotification("Pole nie może być puste.");
+      toast.error("Pole nie może być puste.");
       setNameError(true);
       return;
     }
 
     if (!surname) {
-      addNotification("Pole nie może być puste.");
+      toast.error("Pole nie może być puste.");
       setSurnameError(true);
       return;
     }
@@ -74,10 +74,7 @@ function EditData({ user, mutateUser, addNotification }) {
       const result = await updateUser(user.id, updatedData);
 
       if (result) {
-        addNotification(
-          result.message || "Dane zostały zaktualizowane.",
-          "success"
-        );
+        toast.success(result.message || "Dane zostały zaktualizowane.");
         setUsernameError(false);
         setNameError(false);
         setSurnameError(false);
@@ -86,19 +83,19 @@ function EditData({ user, mutateUser, addNotification }) {
       mutateUser();
     } catch (error) {
       setUsernameError(true);
-      addNotification(error.message || "Wystąpił błąd podczas aktualizacji.");
+      toast.error(error.message || "Wystąpił błąd podczas aktualizacji.");
     }
   };
 
   const handleChangeContact = async () => {
     if (!email) {
-      addNotification("Pole nie może być puste.");
+      toast.error("Pole nie może być puste.");
       setEmailError(true);
       return;
     }
 
     if (!emailRegex.test(email)) {
-      addNotification("Adres e-mail ma niepoprawny format.");
+      toast.error("Adres e-mail ma niepoprawny format.");
       setEmailError(true);
       return;
     }
@@ -111,29 +108,26 @@ function EditData({ user, mutateUser, addNotification }) {
       const result = await updateUser(user.id, updatedData);
 
       if (result) {
-        addNotification(
-          result.message || "Dane zostały zaktualizowane.",
-          "success"
-        );
+        toast.success(result.message || "Dane zostały zaktualizowane.");
         setEmailError(false);
       }
 
       mutateUser();
     } catch (error) {
       setEmailError(true);
-      addNotification(error.message || "Wystąpił błąd podczas aktualizacji.");
+      toast.error(error.message || "Wystąpił błąd podczas aktualizacji.");
     }
   };
 
   const handleChangePassword = async () => {
     if (!password) {
-      addNotification("Pole nie może być puste.");
+      toast.error("Pole nie może być puste.");
       setPasswordError(true);
       return;
     }
 
     if (!passwordRegex.test(password)) {
-      addNotification("Hasło nie spełnia wymagań.");
+      toast.error("Hasło nie spełnia wymagań.");
       setPasswordError(true);
       return;
     }
@@ -146,17 +140,14 @@ function EditData({ user, mutateUser, addNotification }) {
       const result = await updateUser(user.id, updatedData);
 
       if (result) {
-        addNotification(
-          result.message || "Dane zostały zaktualizowane.",
-          "success"
-        );
+        toast.success(result.message || "Dane zostały zaktualizowane.");
         setPasswordError(false);
       }
 
       mutateUser();
     } catch (error) {
       setPasswordError(true);
-      addNotification(error.message || "Wystąpił błąd podczas aktualizacji.");
+      toast.error(error.message || "Wystąpił błąd podczas aktualizacji.");
     }
   };
 

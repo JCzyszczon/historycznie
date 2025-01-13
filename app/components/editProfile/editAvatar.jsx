@@ -5,6 +5,7 @@ import Image from "next/image";
 import Button from "../elements/Button";
 import MoneyBag from "../../img/money-bag.png";
 import LoadingElement from "../elements/loadingElement";
+import { toast } from "react-toastify";
 
 function EditAvatar({ user, mutateUser }) {
   const { avatars, isLoading, isError } = usePurchasedAvatars(user.id);
@@ -13,6 +14,7 @@ function EditAvatar({ user, mutateUser }) {
 
   const handleSetActive = (avatarId) => {
     setActiveAvatar(avatarId);
+    toast.success("Pomyślnie zmieniono awatar.");
   };
 
   return (

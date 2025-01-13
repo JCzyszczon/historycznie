@@ -5,6 +5,7 @@ import Image from "next/image";
 import Button from "../elements/Button";
 import MoneyBag from "../../img/money-bag.png";
 import LoadingElement from "../elements/loadingElement";
+import { toast } from "react-toastify";
 
 function EditBanner({ user, mutateUser }) {
   const { banners, isLoading, isError } = usePurchasedBanners(user.id);
@@ -13,6 +14,7 @@ function EditBanner({ user, mutateUser }) {
 
   const handleSetActive = (bannerId) => {
     setActiveBanner(bannerId);
+    toast.success("Pomyślnie zmieniono banner.");
   };
 
   return (

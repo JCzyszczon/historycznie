@@ -5,8 +5,9 @@ import LoadingElement from "../elements/loadingElement";
 import Image from "next/image";
 import CoinsImage from "../../img/5252389.png";
 import Button from "../elements/Button";
+import { toast } from "react-toastify";
 
-function BuyBadges({ userId, userPoints, pointsMutate, addNotification }) {
+function BuyBadges({ userId, userPoints, pointsMutate }) {
   const {
     badges,
     isLoading,
@@ -17,16 +18,16 @@ function BuyBadges({ userId, userPoints, pointsMutate, addNotification }) {
 
   const handlePurchase = async (badge) => {
     if (userPoints < badge.price) {
-      addNotification("Nie masz wystarczającej liczby punktów!");
+      toast.error("Nie masz wystarczającej liczby punktów!");
       return;
     }
     try {
       await purchaseBadge(userId, badge.id);
-      addNotification("Pomyślnie zakupiono odznakę.", "success");
+      toast.success("Pomyślnie zakupiono odznakę.");
       badgesMutate();
       pointsMutate();
     } catch (error) {
-      addNotification(error.message || "Nie udało się kupić odznaki.");
+      toast.error(error.message || "Nie udało się kupić odznaki.");
     }
   };
 
@@ -49,7 +50,7 @@ function BuyBadges({ userId, userPoints, pointsMutate, addNotification }) {
           {badges.map((badge) => (
             <section
               key={badge.id}
-              className='p-4 border h-min border-borderColor bg-background rounded-xl flex flex-col justify-between items-center gap-6'
+              className='p-4 border sm:h-[248px] h-[228px] h-min border-borderColor bg-background rounded-xl flex flex-col justify-between items-center gap-6'
             >
               <div className='flex flex-col justify-between items-center'>
                 <Image
@@ -57,7 +58,7 @@ function BuyBadges({ userId, userPoints, pointsMutate, addNotification }) {
                   alt={badge.name}
                   width={160}
                   height={160}
-                  className='sm:w-20 w-16 sm:h-20 h-16 rounded-full'
+                  className='sm:w-[64px] w-[52px] sm:h-[64px] h-[52px] rounded-full'
                 />
                 <p className='font-notino font-[600] sm:text-base text-sm mt-2'>
                   {badge.name}

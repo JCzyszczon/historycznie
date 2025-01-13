@@ -7,21 +7,10 @@ import EditAvatar from "./editAvatar";
 import EditBanner from "./editBanner";
 import EditBadges from "./editBadges";
 import EditData from "./editData";
-import Notification from "../notification";
 
 export default function EditModal({ closeModal, user, mutateUser }) {
   const modalRef = useRef(null);
   const [activePanel, setActivePanel] = useState("Avatars");
-  const [notifications, setNotifications] = useState([]);
-
-  const addNotification = (message, type = "error") => {
-    const id = Date.now();
-    setNotifications((prev) => [...prev, { id, message, type }]);
-
-    setTimeout(() => {
-      setNotifications((prev) => prev.filter((notif) => notif.id !== id));
-    }, 2000);
-  };
 
   const handleOutsideClick = (event) => {
     if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -37,7 +26,7 @@ export default function EditModal({ closeModal, user, mutateUser }) {
     <section className='w-screen min-h-dvh max-h-[100px] z-[1100] fixed left-0 top-0 right-0 overflow-x-hidden overflow-y-scroll bg-[#11111199]'>
       <section
         onClick={handleOutsideClick}
-        className='w-screen min-h-dvh z-[1101] flex flex-col justify-center items-center px-2 py-8'
+        className='w-screen min-h-dvh z-[1101] flex flex-col sm:justify-center justify-start items-center px-2 py-8'
       >
         <motion.section
           initial={{ opacity: 0 }}
@@ -45,7 +34,7 @@ export default function EditModal({ closeModal, user, mutateUser }) {
           transition={{ duration: 0.2, type: "tween" }}
           exit={{ opacity: 0 }}
           ref={modalRef}
-          className='w-full max-w-[1000px] h-[700px] flex sm:flex-row flex-col relative bg-background rounded-2xl border border-borderColor overflow-hidden'
+          className='w-full max-w-[1000px] sm:h-[700px] h-auto sm:min-h-0 min-h-[700px] flex sm:flex-row flex-col relative bg-background rounded-2xl border border-borderColor overflow-hidden'
         >
           <IoMdClose
             title='Close Modal'
@@ -61,23 +50,14 @@ export default function EditModal({ closeModal, user, mutateUser }) {
           ) : activePanel === "Banners" ? (
             <EditBanner user={user} mutateUser={mutateUser} />
           ) : activePanel === "Badges" ? (
-            <EditBadges
-              user={user}
-              mutateUser={mutateUser}
-              addNotification={addNotification}
-            />
+            <EditBadges user={user} mutateUser={mutateUser} />
           ) : activePanel === "Data" ? (
-            <EditData
-              user={user}
-              mutateUser={mutateUser}
-              addNotification={addNotification}
-            />
+            <EditData user={user} mutateUser={mutateUser} />
           ) : (
             <></>
           )}
         </motion.section>
       </section>
-      <Notification notifications={notifications} />
     </section>
   );
 }

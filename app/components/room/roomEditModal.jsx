@@ -4,7 +4,8 @@ import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Button from "../elements/Button";
 import Input from "../elements/Input";
-import Notification from "../../components/notification";
+import { IoMdClose } from "react-icons/io";
+import { toast } from "react-toastify";
 
 export default function RoomEditModal({
   closeRoomEditModal,
@@ -12,23 +13,14 @@ export default function RoomEditModal({
   onSave,
 }) {
   const modalRef = useRef(null);
-  const [notifications, setNotifications] = useState([]);
-  const questionsOptions = [10, 15, 20];
+  const questionsOptions = [5, 10, 15, 20, 25];
   const categories = [
+    "Losowe",
     "Starożytność",
     "Średniowiecze",
     "Nowożytność",
     "Współczesność",
   ];
-
-  const addNotification = (message, type = "error") => {
-    const id = Date.now();
-    setNotifications((prev) => [...prev, { id, message, type }]);
-
-    setTimeout(() => {
-      setNotifications((prev) => prev.filter((notif) => notif.id !== id));
-    }, 2000);
-  };
 
   const [roomName, setRoomName] = useState(initialRoomData?.name || "");
   const [questionsCount, setQuestionsCount] = useState(
@@ -49,11 +41,11 @@ export default function RoomEditModal({
 
   const handleSave = () => {
     if (!roomName.trim()) {
-      addNotification("Nazwa pokoju nie może być pusta!");
+      toast.error("Nazwa pokoju nie może być pusta.");
       return;
     }
     if (questionsCount < 1) {
-      addNotification("Liczba pytań musi być większa od 0!");
+      toast.error("Liczba pytań musi być większa od 0!");
       return;
     }
 
@@ -65,29 +57,36 @@ export default function RoomEditModal({
     };
 
     onSave(updatedRoomData);
-    addNotification("Zmieniono ustawienia gry.", "success");
+    toast.success("Zmieniono ustawienia gry.");
     closeRoomEditModal();
   };
 
   return (
-    <section className='w-screen min-h-dvh z-[1100] fixed left-0 top-0 right-0 overflow-x-hidden overflow-y-scroll bg-[#11111199]'>
+    <section className='w-screen min-h-dvh max-h-[100px] z-[1100] fixed left-0 top-0 right-0 overflow-x-hidden overflow-y-scroll bg-[#11111199]'>
       <section
         onClick={handleOutsideClick}
-        className='w-screen min-h-dvh flex justify-center items-center px-2 py-8'
+        className='w-screen min-h-dvh z-[1101] flex flex-col justify-center items-center px-2 py-8'
       >
         <motion.section
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.9 }}
-          transition={{ duration: 0.3 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.2, type: "tween" }}
+          exit={{ opacity: 0 }}
           ref={modalRef}
-          className='w-full max-w-[500px] h-auto flex flex-col gap-6 bg-background rounded-2xl p-6 border border-borderColor shadow-lg'
+          className='w-full max-w-[500px] h-[680px] flex flex-col gap-8 shadow-lg relative bg-background rounded-2xl pt-14 border border-borderColor overflow-y-hidden'
         >
-          <h2 className='text-2xl font-nunito font-bold text-center'>
-            Edytuj ustawienia pokoju
-          </h2>
+          <IoMdClose
+            title='Close Modal'
+            onClick={closeRoomEditModal}
+            className='absolute right-3 top-3 text-3xl text-descriptionColor hover:text-primaryColor duration-200 cursor-pointer'
+          />
+          <section className='w-full flex justify-center items-center'>
+            <h2 className='font-nunito text-2xl font-extrabold tracking-wide text-center'>
+              Ustawienia pokoju
+            </h2>
+          </section>
 
-          <form className='flex flex-col gap-4'>
+          <form className='flex flex-col px-4 gap-4'>
             <Input
               type='text'
               labelText='Nazwa pokoju'
@@ -101,7 +100,7 @@ export default function RoomEditModal({
                   htmlFor={"questionsCount"}
                   className='block mb-2 text-sm font-extrabold font-nunito text-gray-900'
                 >
-                  Liczba pytań:
+                  Liczba pytań
                 </label>
               </section>
               <select
@@ -123,20 +122,20 @@ export default function RoomEditModal({
                   htmlFor={"questionsCategory"}
                   className='block mb-2 text-sm font-extrabold font-nunito text-gray-900'
                 >
-                  Kategoria:
+                  Kategoria
                 </label>
               </section>
-              <section className='w-full flex flex-wrap gap-4'>
+              <section className='w-full grid grid-cols-2 gap-4'>
                 {categories.map((cat) => (
                   <button
                     key={cat}
                     type='button'
                     value={questionsCategory}
                     onClick={() => setQuestionsCategory(cat)}
-                    className={`p-2 rounded-md ${
+                    className={`p-2 rounded-md duration-200 ${
                       questionsCategory === cat
                         ? "bg-primaryColor text-white"
-                        : "bg-borderColor text-descriptionColor"
+                        : "bg-gray-200 text-gray-400"
                     }`}
                   >
                     {cat}
@@ -153,17 +152,13 @@ export default function RoomEditModal({
             />
           </form>
 
-          <div className='flex justify-end gap-4 mt-4'>
-            <Button variant='secondary' onClick={closeRoomEditModal}>
-              Anuluj
-            </Button>
+          <div className='flex flex-col items-end justify-end px-8 gap-4 mt-4'>
             <Button variant='primary' onClick={handleSave}>
               Zapisz
             </Button>
           </div>
         </motion.section>
       </section>
-      <Notification notifications={notifications} />
     </section>
   );
 }

@@ -4,7 +4,7 @@ import Link from "next/link";
 import React from "react";
 import Button from "../../components/elements/Button";
 
-export function GameCard({ gameInfo }) {
+export function GameCard({ gameInfo, handleOpenGuessWhoModal }) {
   return (
     <section className='w-full h-full flex flex-col justify-start items-center bg-background2 gap-4 rounded-2xl group'>
       <div className='w-full h-full sm:min-h-[220px] min-h-[180px] flex relative overflow-hidden rounded-t-2xl'>
@@ -31,15 +31,21 @@ export function GameCard({ gameInfo }) {
         </section>
       </section>
       <section className='w-full flex justify-center items-center px-2 pb-4'>
-        <Link href={gameInfo.buttonLink} className='w-full'>
-          <Button variant='primary'>{gameInfo.buttonText}</Button>
-        </Link>
+        {gameInfo.buttonLink ? (
+          <Link href={gameInfo.buttonLink} className='w-full'>
+            <Button variant='primary'>{gameInfo.buttonText}</Button>
+          </Link>
+        ) : (
+          <Button onClick={handleOpenGuessWhoModal} variant='primary'>
+            {gameInfo.buttonText}
+          </Button>
+        )}
       </section>
     </section>
   );
 }
 
-export function ChallengeCard({ gameInfo }) {
+export function ChallengeCard({ gameInfo, handleOpenChallangeModal }) {
   return (
     <section className='w-full h-full flex flex-col justify-start items-center bg-background border border-borderColor gap-7 rounded-2xl group'>
       <section className='w-full h-full px-4 pt-4'>
@@ -61,9 +67,9 @@ export function ChallengeCard({ gameInfo }) {
         <p className='text-descriptionColor'>{gameInfo.description}</p>
       </section>
       <section className='w-full flex justify-center items-center px-2 pb-4'>
-        <Link href={gameInfo.buttonLink} className='w-full'>
-          <Button variant='primary'>{gameInfo.buttonText}</Button>
-        </Link>
+        <Button onClick={handleOpenChallangeModal} variant='primary'>
+          {gameInfo.buttonText}
+        </Button>
       </section>
     </section>
   );

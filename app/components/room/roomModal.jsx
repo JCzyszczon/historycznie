@@ -6,43 +6,33 @@ import { useSession } from "next-auth/react";
 import { useCreateRoom } from "../../hooks/useCreateRoom";
 import Button from "../elements/Button";
 import Input from "../elements/Input";
-import Notification from "../notification";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 export default function RoomModal({ closeModal }) {
   const modalRef = useRef(null);
   const { data: session } = useSession();
   const userId = session?.user?.id;
   const { createRoom } = useCreateRoom();
-  const [notifications, setNotifications] = useState([]);
   const router = useRouter();
-
-  const addNotification = (message, type = "error") => {
-    const id = Date.now();
-    setNotifications((prev) => [...prev, { id, message, type }]);
-
-    setTimeout(() => {
-      setNotifications((prev) => prev.filter((notif) => notif.id !== id));
-    }, 2000);
-  };
 
   const [formData, setFormData] = useState({
     name: "",
     hostId: userId,
     gameMode: "",
     questionsCount: 10,
-    category: "Wszystkie",
+    category: "Losowe",
     password: "",
   });
 
   const categories = [
-    "Wszystkie",
+    "Losowe",
     "Starożytność",
     "Średniowiecze",
     "Nowożytność",
     "Współczesność",
   ];
-  const questionsOptions = [10, 15, 20];
+  const questionsOptions = [5, 10, 15, 20, 25];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,16 +42,16 @@ export default function RoomModal({ closeModal }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name) {
-      addNotification("Poczekalnia musi posiadać nazwę.");
+      toast.error("Poczekalnia musi posiadać nazwę.");
       return;
     }
     try {
       const result = await createRoom(formData);
-      addNotification("Utworzono nową poczekalnie.", "success");
+      toast.success("Utworzono nową poczekalnie.");
       router.push(`/gry-i-wyzwania/gra-quizowa/${result.id}`);
       closeModal();
     } catch (error) {
-      addNotification(error);
+      toast.error(error || "Wystąpił błąd podczas tworzenia pokoju.");
     }
   };
 
@@ -87,7 +77,7 @@ export default function RoomModal({ closeModal }) {
           transition={{ duration: 0.2, type: "tween" }}
           exit={{ opacity: 0 }}
           ref={modalRef}
-          className='w-full max-w-[500px] h-[700px] flex flex-col gap-8 relative bg-background rounded-2xl pt-14 border border-borderColor overflow-y-hidden'
+          className='w-full max-w-[500px] h-[680px] flex flex-col gap-8 relative bg-background rounded-2xl pt-14 border border-borderColor overflow-y-hidden'
         >
           <IoMdClose
             title='Close Modal'
@@ -96,7 +86,7 @@ export default function RoomModal({ closeModal }) {
           />
           <section className='w-full flex justify-center items-center'>
             <h2 className='font-nunito text-2xl font-extrabold tracking-wide text-center'>
-              Stwórz poczekalnię
+              Stwórz pokój
             </h2>
           </section>
           <form
@@ -177,7 +167,6 @@ export default function RoomModal({ closeModal }) {
           </form>
         </motion.section>
       </section>
-      <Notification notifications={notifications} />
     </section>
   );
 }

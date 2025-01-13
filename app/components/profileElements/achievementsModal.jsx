@@ -39,62 +39,64 @@ export default function AchievementsModal({ closeAchievementsModal, userId }) {
           transition={{ duration: 0.2, type: "tween" }}
           exit={{ opacity: 0 }}
           ref={modalRef}
-          className='w-full max-w-[520px] h-[700px] flex flex-col gap-8 relative bg-background rounded-2xl pt-14 border border-borderColor overflow-y-hidden'
+          className='w-full max-w-[520px] sm:h-[700px] sm:min-h-0 min-h-[700px] h-auto flex bg-background rounded-2xl border border-borderColor sm:overflow-hidden overflow-visible'
         >
-          <IoMdClose
-            title='Close Modal'
-            onClick={handleClose}
-            className='absolute right-3 top-3 text-3xl text-descriptionColor hover:text-primaryColor duration-200 cursor-pointer'
-          />
-          <section className='w-full h-min flex justify-center items-center px-2'>
-            {isLoading || isError || !achievements ? (
-              <></>
-            ) : (
-              <h2 className='font-nunito text-2xl font-extrabold tracking-wide text-center'>
-                {`Osiągnięcia (${percentOfAchievements}%)`}
-              </h2>
-            )}
-          </section>
-          <section className='w-full h-full flex flex-col justify-start items-center gap-8 px-4 pb-12 overflow-y-scroll custom-scrollbar'>
-            {isLoading || isError || !achievements ? (
-              <></>
-            ) : (
-              <>
-                {achievements.achievements.map((achievement) => (
-                  <section
-                    key={achievement.achievement.name}
-                    className='w-full flex gap-4'
-                  >
-                    <section className='w-full max-w-[100px] flex min-h-[100px] rounded-2xl h-full bg-background2 justify-center items-center'>
-                      <Image
-                        src={achievement.achievement.iconUrl}
-                        width={160}
-                        height={160}
-                        className='sm:w-[60px] w-[50px] sm:h-[60px] h-[50px]'
-                        alt={achievement.achievement.name}
-                      />
+          <section className='w-full h-full flex flex-col gap-8 relative pt-14 overflow-y-scroll custom-scrollbar'>
+            <IoMdClose
+              title='Close Modal'
+              onClick={handleClose}
+              className='absolute right-3 top-3 text-3xl text-descriptionColor hover:text-primaryColor duration-200 cursor-pointer'
+            />
+            <section className='w-full h-min flex justify-center items-center px-2'>
+              {isLoading || isError || !achievements ? (
+                <></>
+              ) : (
+                <h2 className='font-nunito text-2xl font-extrabold tracking-wide text-center'>
+                  {`Osiągnięcia (${percentOfAchievements}%)`}
+                </h2>
+              )}
+            </section>
+            <section className='w-full h-auto flex flex-col justify-start items-center gap-8 px-4 pb-6'>
+              {isLoading || isError || !achievements ? (
+                <></>
+              ) : (
+                <>
+                  {achievements.achievements.map((achievement) => (
+                    <section
+                      key={achievement.achievement.name}
+                      className='w-full flex gap-4'
+                    >
+                      <section className='w-full max-w-[100px] flex min-h-[100px] rounded-2xl h-full bg-background2 justify-center items-center'>
+                        <Image
+                          src={achievement.achievement.iconUrl}
+                          width={160}
+                          height={160}
+                          className='sm:w-[60px] w-[50px] sm:h-[60px] h-[50px]'
+                          alt={achievement.achievement.name}
+                        />
+                      </section>
+                      <section className='w-full flex flex-col justify-start items-start gap-2'>
+                        <span className='bg-primaryColor px-2 py-1 rounded-xl text-xs text-background'>
+                          {new Intl.DateTimeFormat("pl-PL", {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          }).format(new Date(achievement.achievedAt))}
+                        </span>
+                        <div className='w-full flex flex-col justify-center items-start gap-1'>
+                          <h3 className='font-nunito font-bold tracking-wide text-lg'>
+                            {achievement.achievement.name}
+                          </h3>
+                          <p className='text-descriptionColor font-light text-sm'>
+                            {achievement.achievement.description}
+                          </p>
+                        </div>
+                      </section>
                     </section>
-                    <section className='w-full flex flex-col justify-start items-start gap-2'>
-                      <span className='bg-primaryColor px-2 py-1 rounded-xl text-xs text-background'>
-                        {new Intl.DateTimeFormat("pl-PL", {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        }).format(new Date(achievement.achievedAt))}
-                      </span>
-                      <div className='w-full flex flex-col justify-center items-start gap-1'>
-                        <h3 className='font-nunito font-bold tracking-wide text-lg'>
-                          {achievement.achievement.name}
-                        </h3>
-                        <p className='text-descriptionColor font-light text-sm'>
-                          {achievement.achievement.description}
-                        </p>
-                      </div>
-                    </section>
-                  </section>
-                ))}
-              </>
-            )}
+                  ))}
+                </>
+              )}
+            </section>
           </section>
         </motion.section>
       </section>

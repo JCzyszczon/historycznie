@@ -1,16 +1,12 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "../utils/authOptions";
-import { User } from "../user";
-import Navbar from "../components/navigation/navbar";
+import MainPanel from "../components/mainPage/mainPanel";
+import MainPanel2 from "../components/mainPage/mainPanel2";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
 
   return (
-    <>
-      <section className='w-full flex flex-col bg-background2 justify-center items-center min-h-screen'>
-        <p>Strona główna</p>
-      </section>
-    </>
+    <>{session ? <MainPanel userId={session.user?.id} /> : <MainPanel2 />}</>
   );
 }

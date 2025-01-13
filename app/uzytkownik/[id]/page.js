@@ -12,6 +12,10 @@ import EditModal from "../../components/editProfile/editModal";
 import ProfileAchievements from "../../components/profileElements/profileAchievements";
 import ProfileBadges from "../../components/profileElements/profileBadges";
 import AchievementsModal from "../../components/profileElements/achievementsModal";
+import QuizGamesStats from "../../components/profileElements/quizGamesStats";
+import QuizGamesModal from "../../components/profileElements/quizGamesModal";
+import GuessGamesStats from "../../components/profileElements/guessGamesStats";
+import GuessGamesModal from "../../components/profileElements/guessGamesModal";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -20,6 +24,8 @@ export default function Home() {
   const { user, isLoading, isError, mutate } = useUser(userId);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAchievementModalOpen, setIsAchievementModalOpen] = useState(false);
+  const [isQuizGamesModalOpen, setIsQuizGamesModalOpen] = useState(false);
+  const [isGuessGamesModalOpen, setIsGuessGamesModalOpen] = useState(false);
 
   useEffect(() => {
     if (isModalOpen) {
@@ -44,6 +50,28 @@ export default function Home() {
   }, [isAchievementModalOpen]);
 
   useEffect(() => {
+    if (isQuizGamesModalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isQuizGamesModalOpen]);
+
+  useEffect(() => {
+    if (isGuessGamesModalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isGuessGamesModalOpen]);
+
+  useEffect(() => {
     if (user) {
       const userName = user.username;
       document.title = userName
@@ -54,7 +82,7 @@ export default function Home() {
 
   return (
     <>
-      <section className='w-full flex flex-col bg-background2 justify-center items-center min-h-dvh px-2 py-20'>
+      <section className='w-full flex flex-col bg-background2 justify-start items-center min-h-dvh px-2 sm:pt-40 pt-20 pb-20 gap-4'>
         <section className='w-full max-w-5xl sm:h-[624px] h-[800px] bg-background rounded-2xl flex flex-col justify-start items-center overflow-hidden z-[1]'>
           <section className='w-full sm:min-h-[360px] min-h-[320px] relative'>
             {isLoading || isError || !user ? (
@@ -147,6 +175,18 @@ export default function Home() {
             )}
           </section>
         </section>
+        {!isLoading && session && userId === session.user.id && (
+          <section className='w-full max-w-5xl grid md:grid-cols-2 grid-cols-1 auto-rows-fr gap-4'>
+            <QuizGamesStats
+              userId={user?.id}
+              handleQuizGamesModal={() => setIsQuizGamesModalOpen(true)}
+            />
+            <GuessGamesStats
+              userId={user?.id}
+              handleGuessGamesModal={() => setIsGuessGamesModalOpen(true)}
+            />
+          </section>
+        )}
       </section>
       <AnimatePresence initial={false} mode='wait' onExitComplete={() => null}>
         {isModalOpen && (
@@ -162,6 +202,22 @@ export default function Home() {
           <AchievementsModal
             userId={user?.id}
             closeAchievementsModal={() => setIsAchievementModalOpen(false)}
+          />
+        )}
+      </AnimatePresence>
+      <AnimatePresence initial={false} mode='wait' onExitComplete={() => null}>
+        {isQuizGamesModalOpen && (
+          <QuizGamesModal
+            userId={user?.id}
+            closeQuizGamesModal={() => setIsQuizGamesModalOpen(false)}
+          />
+        )}
+      </AnimatePresence>
+      <AnimatePresence initial={false} mode='wait' onExitComplete={() => null}>
+        {isGuessGamesModalOpen && (
+          <GuessGamesModal
+            userId={user?.id}
+            closeGuessGamesModal={() => setIsGuessGamesModalOpen(false)}
           />
         )}
       </AnimatePresence>

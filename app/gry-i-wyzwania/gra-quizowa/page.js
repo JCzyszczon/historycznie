@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { FaArrowLeft } from "react-icons/fa6";
@@ -11,11 +10,11 @@ import LoadingElement from "../../components/elements/loadingElement";
 import RoomPasswordModal from "../../components/room/roomPasswordModal";
 import { useRoomPassword } from "../../hooks/useRoomPassword";
 import { useSession } from "next-auth/react";
-import Notification from "../../components/notification";
 import { useRouter } from "next/navigation";
 import { FaPlus } from "react-icons/fa";
 import { FaCircleInfo } from "react-icons/fa6";
 import { FaLock, FaUnlock } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -24,18 +23,8 @@ export default function Home() {
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const { rooms, isLoading, isError, mutate } = useRooms();
   const [room, setRoom] = useState();
-  const [notifications, setNotifications] = useState([]);
   const router = useRouter();
   const { joinRoom } = useRoomPassword();
-
-  const addNotification = (message, type = "error") => {
-    const id = Date.now();
-    setNotifications((prev) => [...prev, { id, message, type }]);
-
-    setTimeout(() => {
-      setNotifications((prev) => prev.filter((notif) => notif.id !== id));
-    }, 2000);
-  };
 
   useEffect(() => {
     if (isModalOpen) {
@@ -48,6 +37,17 @@ export default function Home() {
     };
   }, [isModalOpen]);
 
+  useEffect(() => {
+    if (isPasswordModalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isPasswordModalOpen]);
+
   const setSelectedRoom = (room) => {
     setRoom(room);
     setIsPasswordModalOpen(true);
@@ -58,7 +58,7 @@ export default function Home() {
       await joinRoom(null, room.id);
       router.push(`/gry-i-wyzwania/gra-quizowa/${room.id}`);
     } catch (error) {
-      addNotification(
+      toast.error(
         error.message || "Wystąpił błąd podczas dołączania do pokoju."
       );
     }
@@ -93,8 +93,8 @@ export default function Home() {
               {rooms.length < 1 ? (
                 <section className='w-full h-full sm:min-h-0 min-h-[400px] flex flex-col justify-center items-center gap-4'>
                   <FaCircleInfo className='text-4xl text-descriptionColor' />
-                  <p className='text-base text-descriptionColor text-center font-[500]'>
-                    Obecnie nie ma żadnych aktywnych poczekalni.
+                  <p className='sm:text-base text-sm text-descriptionColor text-center'>
+                    Obecnie nie ma żadnych aktywnych pokojów.
                   </p>
                 </section>
               ) : (
@@ -190,7 +190,6 @@ export default function Home() {
           />
         )}
       </AnimatePresence>
-      <Notification notifications={notifications} />
     </>
   );
 }

@@ -5,8 +5,9 @@ import LoadingElement from "../elements/loadingElement";
 import Image from "next/image";
 import CoinsImage from "../../img/5252389.png";
 import Button from "../elements/Button";
+import { toast } from "react-toastify";
 
-function BuyAvatars({ userId, userPoints, pointsMutate, addNotification }) {
+function BuyAvatars({ userId, userPoints, pointsMutate }) {
   const {
     banners,
     isLoading,
@@ -17,16 +18,16 @@ function BuyAvatars({ userId, userPoints, pointsMutate, addNotification }) {
 
   const handlePurchase = async (avatar) => {
     if (userPoints < avatar.price) {
-      addNotification("Nie masz wystarczającej liczby punktów.");
+      toast.error("Nie masz wystarczającej liczby punktów!");
       return;
     }
     try {
       await purchaseBanner(userId, avatar.id);
-      addNotification("Pomyślnie zakupiono baner.", "success");
+      toast.success("Pomyślnie zakupiono baner.");
       bannersMutate();
       pointsMutate();
     } catch (error) {
-      addNotification(error.message || "Nie udało się kupić baneru.");
+      toast.error(error.message || "Nie udało się kupić baneru.");
     }
   };
 

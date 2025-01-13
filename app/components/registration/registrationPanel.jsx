@@ -7,9 +7,9 @@ import Step1 from "./step1";
 import Step2 from "./step2";
 import Step3 from "./step3";
 import Step4 from "./step4";
-import Notification from "../notification";
 import LoadingElement from "../elements/loadingElement";
 import { signIn } from "next-auth/react";
+import { toast } from "react-toastify";
 
 export default function RegistrationPanel() {
   const [step, setStep] = useState(1);
@@ -18,7 +18,6 @@ export default function RegistrationPanel() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
   const [registrationLoading, setRegistrationLoading] = useState(false);
   const [emailError, setEmailError] = useState(false);
@@ -34,15 +33,6 @@ export default function RegistrationPanel() {
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_=,.?":{}|<>-])[A-Za-z\d!@#$%^&*()_=,.?":{}|<>-]{8,}$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  const addNotification = (message) => {
-    const id = Date.now();
-    setNotifications((prev) => [...prev, { id, message }]);
-
-    setTimeout(() => {
-      setNotifications((prev) => prev.filter((notif) => notif.id !== id));
-    }, 2000);
-  };
 
   const handleEmailChange = (value) => (setEmail(value), setEmailError(false));
 
@@ -79,7 +69,7 @@ export default function RegistrationPanel() {
     setLoading(true);
 
     if (!email && !username) {
-      addNotification("Pola nie mogą być puste.");
+      toast.error("Pola nie mogą być puste.");
       setEmailError(true);
       setUsernameError(true);
       setLoading(false);
@@ -87,21 +77,21 @@ export default function RegistrationPanel() {
     }
 
     if (!email) {
-      addNotification("Pole nie może być puste.");
+      toast.error("Pole nie może być puste.");
       setEmailError(true);
       setLoading(false);
       return;
     }
 
     if (!username) {
-      addNotification("Pole nie może być puste.");
+      toast.error("Pole nie może być puste.");
       setUsernameError(true);
       setLoading(false);
       return;
     }
 
     if (!emailRegex.test(email)) {
-      addNotification("Adres e-mail ma niepoprawny format.");
+      toast.error("Adres e-mail ma niepoprawny format.");
       setEmailError(true);
       setLoading(false);
       return;
@@ -121,7 +111,7 @@ export default function RegistrationPanel() {
       if (response) {
         const data = await response.json();
         if (data.error) {
-          addNotification(data.error);
+          toast.error(data.error || "Wystąpił nieznany błąd.");
           if (data.error.includes("e-mail")) {
             setEmailError(true);
           }
@@ -132,11 +122,10 @@ export default function RegistrationPanel() {
           setStep(2);
         }
       } else {
-        addNotification("Błąd serwera. Spróbuj ponownie później.");
+        toast.error("Błąd serwera. Spróbuj ponownie później.");
       }
     } catch (error) {
-      console.log(error);
-      addNotification("Błąd serwera. Spróbuj ponownie później.");
+      toast.error("Błąd serwera. Spróbuj ponownie później.");
     } finally {
       setLoading(false);
     }
@@ -144,7 +133,7 @@ export default function RegistrationPanel() {
 
   const registerNewUser = async () => {
     if (!name && !surname && !password) {
-      addNotification("Pola nie mogą być puste.");
+      toast.error("Pola nie mogą być puste.");
       setNameError(true);
       setSurnameError(true);
       setPasswordError(true);
@@ -152,25 +141,25 @@ export default function RegistrationPanel() {
     }
 
     if (!name) {
-      addNotification("Pole nie może być puste.");
+      toast.error("Pole nie może być puste.");
       setNameError(true);
       return;
     }
 
     if (!surname) {
-      addNotification("Pole nie może być puste.");
+      toast.error("Pole nie może być puste.");
       setSurnameError(true);
       return;
     }
 
     if (!password) {
-      addNotification("Pole nie może być puste.");
+      toast.error("Pole nie może być puste.");
       setPasswordError(true);
       return;
     }
 
     if (!passwordRegex.test(password)) {
-      addNotification("Hasło nie spełnia wymagań.");
+      toast.error("Hasło nie spełnia wymagań.");
       setPasswordError(true);
       return;
     }
@@ -197,24 +186,24 @@ export default function RegistrationPanel() {
       if (response) {
         const data = await response.json();
         if (data.error) {
-          addNotification(data.error);
+          toast.error(data.error || "Wystąpił nieznany błąd.");
         } else {
           setStep(3);
         }
       } else {
-        addNotification("Błąd serwera. Spróbuj ponownie później.");
+        toast.error("Błąd serwera. Spróbuj ponownie później.");
       }
     } catch (error) {
-      console.log(error);
-      addNotification("Błąd serwera. Spróbuj ponownie później.");
+      toast.error("Błąd serwera. Spróbuj ponownie później.");
     } finally {
+      toast.success("Zapisano dane użytkownika.");
       setRegistrationLoading(false);
     }
   };
 
   const verifyNewUser = async () => {
     if (!verificationCode) {
-      addNotification("Pole nie może być puste.");
+      toast.error("Pole nie może być puste.");
       setVerificationCodeError(true);
       return;
     }
@@ -238,140 +227,134 @@ export default function RegistrationPanel() {
       if (response) {
         const data = await response.json();
         if (data.error) {
-          addNotification(data.error);
+          toast.error(data.error || "Wystąpił nieznany błąd.");
         } else {
           setStep(4);
         }
       } else {
-        addNotification("Błąd serwera. Spróbuj ponownie później.");
+        toast.error("Błąd serwera. Spróbuj ponownie później.");
       }
     } catch (error) {
-      console.log(error);
-      addNotification("Błąd serwera. Spróbuj ponownie później.");
+      toast.error("Błąd serwera. Spróbuj ponownie później.");
     } finally {
+      toast.success("Zweryfikowano użytkownika.");
       setVerificationLoading(false);
     }
   };
 
   return (
-    <>
-      <section className='max-w-md w-full rounded-xl h-[647px] border px-10 pt-10 pb-6 bg-white flex flex-col gap-4 justify-start items-center relative overflow-hidden'>
-        <span
-          className={`absolute top-0 left-0 h-[6px] ${
-            step === 1
-              ? "w-1/4"
-              : step === 2
-              ? "w-1/2"
-              : step === 3
-              ? "w-3/4"
-              : step === 4
-              ? "w-full"
-              : "w-0"
-          } bg-primaryColor duration-1000`}
-        ></span>
-        {step === 1 ? (
-          <Step1
-            email={email}
-            username={username}
-            emailError={emailError}
-            usernameError={usernameError}
-            onEmailChange={handleEmailChange}
-            onUsernameChange={handleUsernameChange}
-          />
-        ) : step === 2 ? (
-          <Step2
-            name={name}
-            surname={surname}
-            nameError={nameError}
-            surnameError={surnameError}
-            password={password}
-            passwordError={passwordError}
-            passwordRequirements={passwordRequirements}
-            onNameChange={handleNameChange}
-            onSurnameChange={handleSurnameChange}
-            onPasswordChange={handlePasswordChange}
-          />
-        ) : step === 3 ? (
-          <Step3
-            verificationCodeError={verificationCodeError}
-            onVerificationCodeChange={handleVerificationCodeChange}
-          />
-        ) : step === 4 ? (
-          <Step4 />
-        ) : (
-          <></>
-        )}
-        {step === 1 ? (
+    <section className='max-w-md w-full rounded-xl h-[647px] border px-10 pt-10 pb-6 bg-white flex flex-col gap-4 justify-start items-center relative overflow-hidden'>
+      <span
+        className={`absolute top-0 left-0 h-[6px] ${
+          step === 1
+            ? "w-1/4"
+            : step === 2
+            ? "w-1/2"
+            : step === 3
+            ? "w-3/4"
+            : step === 4
+            ? "w-full"
+            : "w-0"
+        } bg-primaryColor duration-1000`}
+      ></span>
+      {step === 1 ? (
+        <Step1
+          email={email}
+          username={username}
+          emailError={emailError}
+          usernameError={usernameError}
+          onEmailChange={handleEmailChange}
+          onUsernameChange={handleUsernameChange}
+        />
+      ) : step === 2 ? (
+        <Step2
+          name={name}
+          surname={surname}
+          nameError={nameError}
+          surnameError={surnameError}
+          password={password}
+          passwordError={passwordError}
+          passwordRequirements={passwordRequirements}
+          onNameChange={handleNameChange}
+          onSurnameChange={handleSurnameChange}
+          onPasswordChange={handlePasswordChange}
+        />
+      ) : step === 3 ? (
+        <Step3
+          verificationCodeError={verificationCodeError}
+          onVerificationCodeChange={handleVerificationCodeChange}
+        />
+      ) : step === 4 ? (
+        <Step4 />
+      ) : (
+        <></>
+      )}
+      {step === 1 ? (
+        <Button
+          variant='primary'
+          disabled={loading}
+          onClick={() => checkExistingData()}
+        >
+          {loading ? <LoadingElement /> : "Dalej"}
+        </Button>
+      ) : step === 2 ? (
+        <section className='w-full flex justify-between gap-2'>
+          <Button variant='secondary' onClick={() => setStep(step - 1)}>
+            Wróć
+          </Button>
           <Button
             variant='primary'
-            disabled={loading}
-            onClick={() => checkExistingData()}
+            disabled={registrationLoading}
+            onClick={() => registerNewUser()}
           >
-            {loading ? <LoadingElement /> : "Dalej"}
+            {registrationLoading ? <LoadingElement /> : "Dalej"}
           </Button>
-        ) : step === 2 ? (
-          <section className='w-full flex justify-between gap-2'>
-            <Button variant='secondary' onClick={() => setStep(step - 1)}>
-              Wróć
-            </Button>
-            <Button
-              variant='primary'
-              disabled={registrationLoading}
-              onClick={() => registerNewUser()}
+        </section>
+      ) : step === 3 ? (
+        <>
+          <Button
+            variant='primary'
+            disabled={verificationLoading}
+            onClick={() => verifyNewUser()}
+          >
+            {verificationLoading ? <LoadingElement /> : "Potwierdź"}
+          </Button>
+          <p className='pt-4 text-descriptionColor text-center'>
+            Nie dostałeś kodu?{" "}
+            <a href='/auth/logowanie' className='text-primaryColor font-medium'>
+              Wyślij ponownie
+            </a>
+          </p>
+        </>
+      ) : (
+        <></>
+      )}
+      {(step === 1 || step === 2) && (
+        <>
+          <div className='h-[1px] bg-borderColor w-full relative my-4'>
+            <span className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[60%] bg-background px-2 text-sm text-descriptionColor uppercase'>
+              lub
+            </span>
+          </div>
+          <Button variant='secondary' onClick={() => signIn("google")}>
+            <Image
+              src={GoogleIcon}
+              alt='Google Icon'
+              title='Google Icon'
+              className='w-[32px]'
+            />
+          </Button>
+          <p className='pt-4 text-descriptionColor text-center'>
+            Masz już konto?{" "}
+            <span
+              onClick={() => signIn()}
+              className='text-primaryColor cursor-pointer font-medium'
             >
-              {registrationLoading ? <LoadingElement /> : "Dalej"}
-            </Button>
-          </section>
-        ) : step === 3 ? (
-          <>
-            <Button
-              variant='primary'
-              disabled={verificationLoading}
-              onClick={() => verifyNewUser()}
-            >
-              {verificationLoading ? <LoadingElement /> : "Potwierdź"}
-            </Button>
-            <p className='pt-4 text-descriptionColor text-center'>
-              Nie dostałeś kodu?{" "}
-              <a
-                href='/auth/logowanie'
-                className='text-primaryColor font-medium'
-              >
-                Wyślij ponownie
-              </a>
-            </p>
-          </>
-        ) : (
-          <></>
-        )}
-        {(step === 1 || step === 2) && (
-          <>
-            <div className='h-[1px] bg-borderColor w-full relative my-4'>
-              <span className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[60%] bg-background px-2 text-sm text-descriptionColor uppercase'>
-                lub
-              </span>
-            </div>
-            <Button variant='secondary' onClick={() => signIn("google")}>
-              <Image
-                src={GoogleIcon}
-                alt='Google Icon'
-                title='Google Icon'
-                className='w-[32px]'
-              />
-            </Button>
-            <p className='pt-4 text-descriptionColor text-center'>
-              Masz już konto?{" "}
-              <span
-                onClick={() => signIn()}
-                className='text-primaryColor cursor-pointer font-medium'
-              >
-                Zaloguj się
-              </span>
-            </p>
-          </>
-        )}
-      </section>
-      <Notification notifications={notifications} />
-    </>
+              Zaloguj się
+            </span>
+          </p>
+        </>
+      )}
+    </section>
   );
 }

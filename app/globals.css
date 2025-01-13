@@ -353,6 +353,22 @@ input:-webkit-autofill:active {
   text-align: center;
 }
 
+.swiper {
+  width: 100%;
+  max-width: 400px;
+  height: 500px;
+}
+
+.swiper-slide {
+  display: flex;
+  align-items: start;
+  justify-content: start;
+  border-radius: 18px;
+  font-weight: bold;
+  color: var(--textColor);
+  background-color: var(--background);
+}
+
 @media (max-width: 639px) {
   .grid-panel-avatars {
     grid-template-columns: repeat(2, 1fr);
@@ -363,4 +379,63 @@ input:-webkit-autofill:active {
     grid-template-columns: repeat(auto-fit, 100%);
     gap: 12px;
   }
+
+  .button-primary {
+    font-size: 14px;
+  }
+
+  .button-secondary {
+    font-size: 14px;
+  }
+
+  .button-bad {
+    font-size: 14px;
+  }
+
+  .swiper {
+    width: 96%;
+    height: 400px;
+  }
+}
+
+.bubble-menu {
+  background-color: var(--background);
+  border: 1px solid var(--borderColor);
+  border-radius: 0.7rem;
+  box-shadow: 2px #000;
+  display: flex;
+  gap: 4px;
+  padding: 4px 1px;
+}
+
+.bubble-menu button {
+  background-color: unset;
+  padding: 4px 1px;
+  min-width: 80px;
+  border-radius: 8px;
+}
+
+.bubble-menu button:hover {
+  background-color: var(--background2);
+}
+
+.bubble-menu button.is-active {
+  background-color: var(--primaryColor);
+  color: var(--background);
+}
+
+.bubble-menu button.is-active:hover {
+  background-color: var(--secondaryColor);
+}
+
+blockquote {
+  background-color: var(--background2);
+  border-radius: 8px;
+  color: var(--descriptionColor);
+  padding: 4px 16px;
+  margin: 8px 4px;
+}
+
+p:empty {
+  height: 1em;
 }

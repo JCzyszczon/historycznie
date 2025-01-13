@@ -63,7 +63,7 @@ function NavLogged({ session }) {
                 pathname === "/lekcje" ? "active" : ""
               }`}
             >
-              Lekcje
+              <Link href='/lekcje'>Lekcje</Link>
             </li>
             <li
               className={`duration-200 ${
@@ -137,7 +137,7 @@ function NavLogged({ session }) {
         {navState && (
           <motion.section
             initial={{ height: 0 }}
-            animate={{ height: "90dvh" }}
+            animate={{ height: "100dvh" }}
             exit={{ height: 0 }}
             transition={{ duration: 0.2 }}
             className='w-full sm:hidden flex flex-col bg-background justify-center items-center gap-4 overflow-auto pb-10'
@@ -150,8 +150,14 @@ function NavLogged({ session }) {
                   Strona główna
                 </Link>
               </li>
-              <li className='hover:text-descriptionColor duration-200'>
-                Lekcje
+              <li
+                className={`duration-200 ${
+                  pathname === "/lekcje" ? "active" : ""
+                } hover:text-descriptionColor duration-200`}
+              >
+                <Link onClick={() => setNavState(false)} href='/lekcje'>
+                  Lekcje
+                </Link>
               </li>
               <li
                 className={`duration-200 ${
